@@ -1,0 +1,61 @@
+{
+  "name": "@klinecharts/pro",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "./dist/klinecharts-pro.umd.cjs",
+  "module": "./dist/klinecharts-pro.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "docs/",
+    "index.js",
+    "dist/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/klinecharts/Pro"
+  },
+  "keywords": [
+    "klinecharts",
+    "pro",
+    "candlestick",
+    "finance",
+    "stock",
+    "chart",
+    "canvas"
+  ],
+  "author": "liihuu",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@solidjs/testing-library": "^0.6.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@types/testing-library__jest-dom": "^5.14.5",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "babel-preset-solid": "^1.6.10",
+    "less": "^4.1.3",
+    "less-loader": "^11.1.0",
+    "eslint": "^8.35.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.1",
+    "vite-plugin-solid": "^2.6.1",
+    "vitest": "^0.28.4"
+  },
+  "dependencies": {
+    "klinecharts": "^9.1.0",
+    "solid-element": "^1.6.3",
+    "solid-js": "^1.6.11"
+  }
+}
