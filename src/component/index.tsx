@@ -12,21 +12,14 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
+import Button from './button'
+import Checkbox from './checkbox'
+import List from './list'
+import Modal from './modal'
+import Select, { SelectDataSourceItem } from './select'
 
-customElement(
-  'klinecharts-pro', 
-  {
-    class: '',
-    networkState: 'ok' as NetworkState,
-    locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
-    symbol: '',
-    defaultPeriod: '1m',
-    periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[]
-  },
-  KLineChartPro
-)
+export {
+  Button, Checkbox, List, Modal, Select
+}
+
+export type { SelectDataSourceItem }

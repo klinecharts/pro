@@ -1,0 +1,23 @@
+@import (reference) '../../base.less';
+
+.@{prefix-cls}-list  {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  font-size: 14px;
+  color: var(---klinecharts-pro-text-color);
+  min-height: 200px;
+  li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+    &:hover {
+      color: var(--klinecharts-pro-primary-color);
+    }
+  }
+}

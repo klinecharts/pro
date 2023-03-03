@@ -1,4 +1,6 @@
 @import (reference) './base.less';
+@import './component/index.less';
+@import './widget/index.less';
 // @import './iconfonts/style.css';
 
 :root {
@@ -32,16 +34,8 @@
     width: 100%;
     height: @widget-height;
   }
-  &-drawing-bar {
-    width: @drawing-bar-width;
-    height: 100%;
-    box-sizing: border-box;
-    border-right: solid 1px var(--klinecharts-pro-border-color);
-  }
   &-widget {
     width: @widget-width;
     height: 100%;
   }
 }
-
-@import './widget/period-bar/index.less';

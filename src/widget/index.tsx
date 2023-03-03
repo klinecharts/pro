@@ -12,21 +12,12 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
+import PeriodBar from './period-bar'
+import DrawingBar from './drawing-bar'
+import IndicatorModal from './indicator-modal'
+import TimezoneModal from './timezone-modal'
+import ScreenshotModal from './screenshot-modal'
 
-customElement(
-  'klinecharts-pro', 
-  {
-    class: '',
-    networkState: 'ok' as NetworkState,
-    locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
-    symbol: '',
-    defaultPeriod: '1m',
-    periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[]
-  },
-  KLineChartPro
-)
+export {
+  PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal
+}

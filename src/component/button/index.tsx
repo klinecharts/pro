@@ -12,21 +12,26 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
+import { ParentComponent, ParentProps, JSX } from 'solid-js'
 
-customElement(
-  'klinecharts-pro', 
-  {
-    class: '',
-    networkState: 'ok' as NetworkState,
-    locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
-    symbol: '',
-    defaultPeriod: '1m',
-    periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[]
-  },
-  KLineChartPro
-)
+export type ButtonType = 'confirm' | 'cancel'
+
+export interface ButtonProps extends ParentProps {
+  class?: string
+  style?: JSX.CSSProperties | string
+  type?: ButtonType
+  onClick?: () => void
+}
+
+const Button: ParentComponent<ButtonProps> = props => {
+  return (
+    <button
+      style={props.style}
+      class={`klinecharts-pro-button ${props.type ?? 'confirm'} ${props.class?? ''}`}
+      onClick={props.onClick}>
+      {props.children}
+    </button>
+  )
+}
+
+export default Button

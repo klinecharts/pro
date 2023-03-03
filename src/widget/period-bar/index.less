@@ -22,8 +22,10 @@
     transition: all 0.2s;
     box-sizing: border-box;
     cursor: pointer;
+    fill: var(--klinecharts-pro-text-color);
     &:hover {
       color: var(--klinecharts-pro-primary-color);
+      fill: var(--klinecharts-pro-primary-color);
     }
     &.selected {
       background-color: var(--klinecharts-pro-hover-background-color);
@@ -49,7 +51,9 @@
     height: 100%;
     padding: 0 12px;
     border-right: solid 1px var(--klinecharts-pro-border-color);
-    .icon {
+    svg {
+      width: 20px;
+      height: 20px;
       margin-right: 4px;
     }
   }

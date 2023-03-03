@@ -12,21 +12,20 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
+import zhCN from './zh-CN.json'
+import enUS from './en-US.json'
 
-customElement(
-  'klinecharts-pro', 
-  {
-    class: '',
-    networkState: 'ok' as NetworkState,
-    locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
-    symbol: '',
-    defaultPeriod: '1m',
-    periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[]
-  },
-  KLineChartPro
-)
+const locales = {
+  'zh-CN': zhCN,
+  'en-US': enUS
+}
+
+export function load (key: string, ls: any) {
+  // @ts-expect-error
+  locales[key] = ls
+}
+
+export default (key: string, locale: string) => {
+  // @ts-expect-error
+  return locales[locale]?.[key] ?? key
+}
