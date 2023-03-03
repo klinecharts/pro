@@ -14,7 +14,9 @@
 
 import { Component, createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
 
-import { KLineData, Nullable, Chart, init } from 'klinecharts'
+import { KLineData, Nullable, Chart, init, registerOverlay } from 'klinecharts'
+
+import overlays from './extension'
 
 import { PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal } from './widget'
 
@@ -50,6 +52,8 @@ export interface KLineChartProProps {
   loadData?: LoadData
   updateData?: UpdateData
 }
+
+overlays.forEach(o => { registerOverlay(o) })
 
 const KLineChartPro: Component<KLineChartProProps> = (props) => {
   let widgetRef: HTMLDivElement | undefined = undefined
