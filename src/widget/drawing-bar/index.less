@@ -5,4 +5,27 @@
   height: 100%;
   box-sizing: border-box;
   border-right: solid 1px var(--klinecharts-pro-border-color);
+  .item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    margin-top: 4px;
+    cursor: pointer;
+    svg {
+      width: 36px;
+      height: 36px;
+      fill: var(--klinecharts-pro-text-color);
+      stroke: var(--klinecharts-pro-text-color);
+      &:hover {
+        fill: var(--klinecharts-pro-primary-color);
+        stroke: var(--klinecharts-pro-primary-color);
+      }
+    }
+    &:hover {
+
+    }
+  }
 }

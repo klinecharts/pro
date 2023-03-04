@@ -12,15 +12,56 @@
  * limitations under the License.
  */
 
-import { Component } from 'solid-js'
+import { Component, createMemo, createSignal } from 'solid-js'
+import {
+  mapping, createSingleLineOptions, createMoreLineOptions,
+  createPolygonOptions, createFibonacciOptions, createWaveOptions,
+  getIconByKey
+} from '../../icons'
 
 export interface DrawingBarProps {
+  locale: string
 }
 
-const DrawingBar: Component<DrawingBarProps> = () => {
+const DrawingBar: Component<DrawingBarProps> = props => {
+  const [currentSingleLine, setCurrentSingleLine] = createSignal('horizontalStraightLine')
+  const [currentMoreLine, setCurrentMoreLine] = createSignal('priceChannelLine')
+  const [currentPolygon, setCurrentPolygon] = createSignal('circle')
+  const [currentFibonacci, setCurrentFibonacci] = createSignal('fibonacciLine')
+  const [currennWave, setCurrentWave] = createSignal('threeWaves')
+
+  const overlays = createMemo(() => {
+
+  })
+
   return (
     <div
       class="klinecharts-pro-drawing-bar">
+      <div class="item">
+        <div class="icon-container">
+          {getIconByKey(currentSingleLine())}
+        </div>
+      </div>
+      <div class="item">
+        <div class="icon-container">
+          {getIconByKey(currentMoreLine())}
+        </div>
+      </div>
+      <div class="item">
+        <div class="icon-container">
+          {getIconByKey(currentPolygon())}
+        </div>
+      </div>
+      <div class="item">
+        <div class="icon-container">
+          {getIconByKey(currentFibonacci())}
+        </div>
+      </div>
+      <div class="item">
+        <div class="icon-container">
+          {getIconByKey(currennWave())}
+        </div>
+      </div>
     </div>
   )
 }

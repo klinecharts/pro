@@ -192,7 +192,8 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
         }}
       />
       <div class="klinecharts-pro-content">
-        <DrawingBar/>
+        <DrawingBar
+          locale={props.locale}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>
