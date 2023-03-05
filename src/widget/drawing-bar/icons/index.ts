@@ -48,6 +48,9 @@ import xabcd from './xabcd'
 import weakMagnet from './weakMagnet'
 import strongMagnet from './strongMagnet'
 
+import lock from './lock'
+import unlock from './unlock'
+
 import type { SelectDataSourceItem } from '../../../component'
 
 import i18n from '../../../i18n'
@@ -84,7 +87,9 @@ export const mapping = {
   abcd,
   xabcd,
   weak_magnet: weakMagnet,
-  strong_magnet: strongMagnet
+  strong_magnet: strongMagnet,
+  lock,
+  unlock
 }
 
 export function createSingleLineOptions (locale: string): SelectDataSourceItem[] {

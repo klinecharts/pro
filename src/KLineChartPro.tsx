@@ -202,7 +202,8 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
         <DrawingBar
           locale={props.locale}
           onDrawingItemClick={overlay => { widget?.createOverlay(overlay) }}
-          onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}/>
+          onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}
+          onLockChange={lock => { widget?.overrideOverlay({ lock }) }}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>

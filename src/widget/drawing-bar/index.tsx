@@ -27,7 +27,8 @@ import {
 export interface DrawingBarProps {
   locale: string
   onDrawingItemClick: (overlay: OverlayCreate) => void
-  onModeChange: (mode: string) => void
+  onModeChange: (mode: string) => void,
+  onLockChange: (lock: boolean) => void
 }
 
 const DrawingBar: Component<DrawingBarProps> = props => {
@@ -39,6 +40,8 @@ const DrawingBar: Component<DrawingBarProps> = props => {
 
   const [modeIcon, setModeIcon] = createSignal('weak_magnet')
   const [mode, setMode] = createSignal('normal')
+
+  const [lock, setLock] = createSignal(false)
 
   const [popoverKey, setPopoverKey] = createSignal('')
 
@@ -65,7 +68,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
             onBlur={() => { setPopoverKey('') }}>
             <span
               style="width:32px;height:32px"
-              onClick={() => { props.onDrawingItemClick({ name: item.icon, mode: mode() as OverlayMode }) }}>
+              onClick={() => { props.onDrawingItemClick({ name: item.icon, lock: lock(), mode: mode() as OverlayMode }) }}>
               <Icon name={item.icon} />
             </span>
             <div
@@ -91,7 +94,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
                       <li
                         onClick={() => {
                           item.setter(data.key)
-                          props.onDrawingItemClick({ name: data.key, mode: mode() as OverlayMode })
+                          props.onDrawingItemClick({ name: data.key, lock: lock(), mode: mode() as OverlayMode })
                         }}>
                         <Icon name={data.key}/>
                         <span style="padding-left:8px">{data.text}</span>
@@ -110,6 +113,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
         tabIndex={0}
         onBlur={() => { setPopoverKey('') }}>
         <span
+          style="width:32px;height:32px"
           onClick={() => {
             let currentMode = modeIcon()
             if (mode() !== 'normal') {
@@ -155,6 +159,18 @@ const DrawingBar: Component<DrawingBarProps> = props => {
             </List>
           )
         }
+      </div>
+      <div
+        class="item">
+        <span
+          style="width:32px;height:32px"
+          onClick={() => {
+            const currentLock = !lock()
+            setLock(currentLock)
+            props.onLockChange(currentLock)
+          }}>
+          <Icon name={lock() ? 'lock' : 'unlock'} />
+        </span>
       </div>
     </div>
   )
