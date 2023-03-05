@@ -14,7 +14,7 @@
 
 import { Component, createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
 
-import { KLineData, Nullable, Chart, init, registerOverlay } from 'klinecharts'
+import { KLineData, Nullable, Chart, init, registerOverlay, OverlayMode } from 'klinecharts'
 
 import overlays from './extension'
 
@@ -60,6 +60,7 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
   let widgetRef: HTMLDivElement | undefined = undefined
   let widget: Nullable<Chart> = null
   let loading = false
+  let magnetMode = 'normal'
   const [currentPeriod, setCurrentPeriod] = createSignal(props.defaultPeriod)
   const [indicatorModalVisible, setIndicatorModalVisible] = createSignal(false)
   const [mainIndicators, setMainIndicators] = createSignal([...(props.defaultMainIndicators)])
@@ -200,7 +201,8 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
       <div class="klinecharts-pro-content">
         <DrawingBar
           locale={props.locale}
-          onDrawingItemClick={name => { widget?.createOverlay(name) }}/>
+          onDrawingItemClick={overlay => { widget?.createOverlay(overlay) }}
+          onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>

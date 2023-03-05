@@ -17,6 +17,9 @@ import { OverlayTemplate, PolygonAttrs, LineAttrs } from 'klinecharts'
 const xabcd: OverlayTemplate = {
   name: 'xabcd',
   totalStep: 6,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates }) => {
     const dashedLines: LineAttrs[] = []
     const polygons: PolygonAttrs[] = []

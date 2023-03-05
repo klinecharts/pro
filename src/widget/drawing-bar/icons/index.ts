@@ -45,6 +45,9 @@ import anyWaves from './anyWaves'
 import abcd from './abcd'
 import xabcd from './xabcd'
 
+import weakMagnet from './weakMagnet'
+import strongMagnet from './strongMagnet'
+
 import type { SelectDataSourceItem } from '../../../component'
 
 import i18n from '../../../i18n'
@@ -79,7 +82,9 @@ export const mapping = {
   eightWaves,
   anyWaves,
   abcd,
-  xabcd
+  xabcd,
+  weak_magnet: weakMagnet,
+  strong_magnet: strongMagnet
 }
 
 export function createSingleLineOptions (locale: string): SelectDataSourceItem[] {
@@ -137,9 +142,17 @@ export function createWaveOptions (locale: string): SelectDataSourceItem[] {
   ]
 }
 
+export function createMagnetOptions (locale: string): SelectDataSourceItem[] {
+  return [
+    { key: 'weak_magnet', text: i18n('weak_magnet', locale) },
+    { key: 'strong_magnet', text: i18n('strong_magnet', locale) }
+  ]
+}
+
 interface IconProps {
+  class?: string
   name: string
 }
 
 // @ts-expect-error
-export const Icon: Component<IconProps> = props => mapping[props.name]()
+export const Icon: Component<IconProps> = props => { console.log(props.name); return mapping[props.name]() }

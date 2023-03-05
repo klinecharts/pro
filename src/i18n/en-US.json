@@ -84,5 +84,8 @@
   "eight_waves": "Eight Waves",
   "any_waves": "Any Waves",
   "abcd": "ABCD Pattern",
-  "xabcd": "XABCD Pattern"
+  "xabcd": "XABCD Pattern",
+
+  "weak_magnet": "Weak Magnet",
+  "strong_magnet": "Strong Magnet"
 }

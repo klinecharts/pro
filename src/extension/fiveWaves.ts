@@ -17,6 +17,9 @@ import { OverlayTemplate } from 'klinecharts'
 const fiveWaves: OverlayTemplate = {
   name: 'fiveWaves',
   totalStep: 7,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates }) => {
     const texts = coordinates.map((coordinate, i) => ({
       ...coordinate,

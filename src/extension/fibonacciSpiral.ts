@@ -19,6 +19,9 @@ import { getDistance, getRotateCoordinate, getRayLine } from './utils'
 const fibonacciSpiral: OverlayTemplate = {
   name: 'fibonacciSpiral',
   totalStep: 3,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates, bounding }) => {
     if (coordinates.length > 1) {
       const startRadius = getDistance(coordinates[0], coordinates[1]) / Math.sqrt(24)

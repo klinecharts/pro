@@ -84,5 +84,8 @@
   "eight_waves": "八浪",
   "any_waves": "任意浪",
   "abcd": "ABCD形态",
-  "xabcd": "XABCD形态"
+  "xabcd": "XABCD形态",
+
+  "weak_magnet": "弱磁模式",
+  "strong_magnet": "强磁模式"
 }

@@ -19,6 +19,9 @@ import { getRayLine } from './utils'
 const fibonacciSpeedResistanceFan: OverlayTemplate = {
   name: 'fibonacciSpeedResistanceFan',
   totalStep: 3,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates, bounding }) => {
     const lines1: LineAttrs[] = []
     let lines2: LineAttrs[] = []

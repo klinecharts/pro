@@ -17,6 +17,9 @@ import { OverlayTemplate } from 'klinecharts'
 const triangle: OverlayTemplate = {
   name: 'triangle',
   totalStep: 4,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates }) => {
     return [
       {

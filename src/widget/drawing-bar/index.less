@@ -1,5 +1,7 @@
 @import (reference) '../../base.less';
 
+@gap: 8px;
+
 .@{prefix-cls}-drawing-bar {
   width: @drawing-bar-width;
   height: 100%;
@@ -12,7 +14,7 @@
     justify-content: center;
     position: relative;
     width: 100%;
-    margin-top: 4px;
+    margin-top: @gap;
     cursor: pointer;
     fill: var(--klinecharts-pro-text-color);
     stroke: var(--klinecharts-pro-text-color);
@@ -23,6 +25,11 @@
       transition: all 0.2s;
       &:hover {
         background-color: var(--klinecharts-pro-hover-background-color);
+      }
+      &.selected {
+        background-color: var(--klinecharts-pro-selected-color)!important;
+        fill: var(--klinecharts-pro-primary-color);
+        stroke: var(--klinecharts-pro-primary-color);
       }
     }
     .icon-arrow {
@@ -78,5 +85,13 @@
         opacity: 1;
       }
     }
+  }
+
+  .split-line {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: var(--klinecharts-pro-border-color);
+    margin-top: @gap;
   }
 }

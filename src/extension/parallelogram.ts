@@ -17,6 +17,9 @@ import { OverlayTemplate } from 'klinecharts'
 const parallelogram: OverlayTemplate = {
   name: 'parallelogram',
   totalStep: 4,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates }) => {
     if (coordinates.length === 2) {
       return [

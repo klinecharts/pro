@@ -17,6 +17,9 @@ import { OverlayTemplate } from 'klinecharts'
 const gannBox: OverlayTemplate = {
   name: 'gannBox',
   totalStep: 3,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates }) => {
     if (coordinates.length > 1) {
       const quarterYDis = (coordinates[1].y - coordinates[0].y) / 4

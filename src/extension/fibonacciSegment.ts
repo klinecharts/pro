@@ -17,6 +17,9 @@ import { OverlayTemplate, LineAttrs, TextAttrs } from 'klinecharts'
 const fibonacciSegment: OverlayTemplate = {
   name: 'fibonacciSegment',
   totalStep: 3,
+  needDefaultPointFigure: true,
+  needDefaultXAxisFigure: true,
+  needDefaultYAxisFigure: true,
   createPointFigures: ({ coordinates, overlay, precision }) => {
     const lines: LineAttrs[] = []
     const texts: TextAttrs[] = []
