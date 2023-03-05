@@ -41,6 +41,7 @@ export type UpdateData = (
 export interface KLineChartProProps {
   class: string
   style?: JSX.CSSProperties
+  theme: string
   locale: string
   networkState: NetworkState
   symbol: string
@@ -118,13 +119,18 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
   })
 
   createEffect(() => {
+    widget?.setStyles(props.theme)
+  })
+
+  createEffect(() => {
     setInnerTimezone({ key: props.timezone, text: translateTimezone(props.timezone, props.locale) })
   })
 
   return (
     <div
       style={props.style}
-      class={`klinecharts-pro ${props.class}`}>
+      class={`klinecharts-pro ${props.class}`}
+      data-theme={props.theme}>
       <style>{styles}</style>
       <Show when={indicatorModalVisible()}>
         <IndicatorModal
@@ -193,7 +199,8 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
       />
       <div class="klinecharts-pro-content">
         <DrawingBar
-          locale={props.locale}/>
+          locale={props.locale}
+          onDrawingItemClick={name => { widget?.createOverlay(name) }}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>

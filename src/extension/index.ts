@@ -13,6 +13,7 @@ import gannBox from './gannBox'
 import threeWaves from './threeWaves'
 import fiveWaves from './fiveWaves'
 import eightWaves from './eightWaves'
+import anyWaves from './anyWaves'
 import abcd from './abcd'
 import xabcd from './xabcd'
 
@@ -21,7 +22,7 @@ const overlays = [
   circle, rect, triangle, parallelogram,
   fibonacciCircle, fibonacciSegment, fibonacciSpiral,
   fibonacciSpeedResistanceFan, fibonacciExtension, gannBox,
-  threeWaves, fiveWaves, eightWaves, abcd, xabcd
+  threeWaves, fiveWaves, eightWaves, anyWaves, abcd, xabcd
 ]
 
 export default overlays

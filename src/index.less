@@ -3,29 +3,26 @@
 @import './widget/index.less';
 // @import './iconfonts/style.css';
 
-:root {
+.@{prefix-cls} {
   --klinecharts-pro-primary-color: @c-primary;
-  --klinecharts-pro-hover-background-color: @c-hover-background;
+  --klinecharts-pro-hover-background-color: @c-hover-background-light;
   --klinecharts-pro-background-color: @c-background-light;
+  --klinecharts-pro-popover-background-color: @c-popover-background-light;
   --klinecharts-pro-text-color: @c-text-light;
   --klinecharts-pro-border-color: @c-border-light;
-}
-
-.@{prefix-cls} {
+  --klinecharts-pro-selected-color: fade(@c-primary, 15%);
   &[data-theme="dark"] {
-    :root {
-      --klinecharts-pro-primary-color: @c-primary;
-      --klinecharts-pro-hover-background-color: @c-hover-background;
-      --klinecharts-pro-background-color: @c-background-dark;
-      --klinecharts-pro-bckground-color: @c-border-dark;
-      --klinecharts-pro-text-color: @c-text-dark;
-      --klinecharts-pro-border-color: @c-border-dark;
-    }
+    --klinecharts-pro-hover-background-color: @c-hover-background-dark;
+    --klinecharts-pro-background-color: @c-background-dark;
+    --klinecharts-pro-popover-background-color: @c-popover-background-dark;
+    --klinecharts-pro-text-color: @c-text-dark;
+    --klinecharts-pro-border-color: @c-border-dark;
   }
   position: relative;
   display: flex;
   flex-direction: column;
   color: var(--klinecharts-pro-text-color);
+  background-color: var(--klinecharts-pro-background-color);
   font-size: 14px;
   height: 80vh;
   &-content {

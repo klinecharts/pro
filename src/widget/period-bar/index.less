@@ -23,12 +23,8 @@
     box-sizing: border-box;
     cursor: pointer;
     fill: var(--klinecharts-pro-text-color);
-    &:hover {
-      color: var(--klinecharts-pro-primary-color);
-      fill: var(--klinecharts-pro-primary-color);
-    }
     &.selected {
-      background-color: var(--klinecharts-pro-hover-background-color);
+      background-color: var(--klinecharts-pro-selected-color)!important;
       color: var(--klinecharts-pro-primary-color);
     }
   }
@@ -36,6 +32,9 @@
     padding: 2px 6px;
     margin: 0 4px;
     border-radius: 2px;
+    &:hover {
+      background-color: var(--klinecharts-pro-hover-background-color);
+    }
     &:first-child {
       margin-left: 8px;
     }
@@ -51,6 +50,10 @@
     height: 100%;
     padding: 0 12px;
     border-right: solid 1px var(--klinecharts-pro-border-color);
+    &:hover {
+      fill: var(--klinecharts-pro-primary-color);
+      color: var(--klinecharts-pro-primary-color);
+    }
     svg {
       width: 20px;
       height: 20px;

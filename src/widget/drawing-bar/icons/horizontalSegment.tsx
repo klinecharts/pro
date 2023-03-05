@@ -12,22 +12,8 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
-
-customElement(
-  'klinecharts-pro', 
-  {
-    class: '',
-    theme: 'light',
-    networkState: 'ok' as NetworkState,
-    locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
-    symbol: '',
-    defaultPeriod: '1m',
-    periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[]
-  },
-  KLineChartPro
+export default () => (
+  <svg class="icon-overlay" viewBox="0 0 22 22">
+    <path d="M6.91465,12.5C6.70873,13.0826,6.15311,13.5,5.5,13.5C4.671573,13.5,4,12.82843,4,12C4,11.171573,4.671573,10.5,5.5,10.5C6.15311,10.5,6.70873,10.917404,6.91465,11.5L16.0853,11.5C16.2913,10.917404,16.846899999999998,10.5,17.5,10.5C18.328400000000002,10.5,19,11.171573,19,12C19,12.82843,18.328400000000002,13.5,17.5,13.5C16.846899999999998,13.5,16.2913,13.0826,16.0853,12.5L6.91465,12.5Z" stroke-opacity="0" stroke="none"/>
+  </svg>
 )
