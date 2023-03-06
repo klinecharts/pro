@@ -12,11 +12,14 @@
  * limitations under the License.
  */
 
-import { Component, createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
+import { createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
 
-import { KLineData, Nullable, Chart, init, registerOverlay, OverlayMode } from 'klinecharts'
+import { ComponentType } from 'solid-element'
+
+import { KLineData, Nullable, Chart, init, registerOverlay, OverlayMode, TooltipIconPosition } from 'klinecharts'
 
 import overlays from './extension'
+import { SelectDataSourceItem } from './component'
 
 import { PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal } from './widget'
 
@@ -24,19 +27,22 @@ import { translateTimezone } from './widget/timezone-modal/data'
 
 // @ts-expect-error
 import styles from './index.less'
-import { SelectDataSourceItem } from './component'
 
 export type NetworkState = 'pending' | 'ok' | 'error'
 
-export type LoadData = (
-  params: { symbol: string, period: string, timestamp: Nullable<number> },
-  success: (dataList: KLineData[], more: boolean) => void,
-  error: () => void
-) => void
-export type UpdateData = (
-  params: { symbol: string, period: string },
+export interface LoadDataEventDetail {
+  symbol: string
+  period: string
+  timestamp: Nullable<number>
+  successCallback: (dataList: KLineData[], more: boolean) => void
+  errorCallback: () => void
+}
+
+export interface UpdateDataEventDetail {
+  symbol: string
+  period: string
   callback: (data: KLineData) => void
-) => void
+}
 
 export interface KLineChartProProps {
   class: string
@@ -47,27 +53,25 @@ export interface KLineChartProProps {
   symbol: string
   defaultPeriod: string
   periods: string[]
-  timezone: string
+  defaultTimezone: string
   defaultMainIndicators: string[]
   defaultSubIndicators: string[]
-  loadData?: LoadData
-  updateData?: UpdateData
 }
 
 overlays.forEach(o => { registerOverlay(o) })
 
-const KLineChartPro: Component<KLineChartProProps> = (props) => {
+const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOptions) => {
   let widgetRef: HTMLDivElement | undefined = undefined
   let widget: Nullable<Chart> = null
   let loading = false
-  let magnetMode = 'normal'
+
   const [currentPeriod, setCurrentPeriod] = createSignal(props.defaultPeriod)
   const [indicatorModalVisible, setIndicatorModalVisible] = createSignal(false)
   const [mainIndicators, setMainIndicators] = createSignal([...(props.defaultMainIndicators)])
   const [subIndicators, setSubIndicators] = createSignal({})
 
   const [timezoneModalVisible, setTimezoneModalVisible] = createSignal(false)
-  const [innerTimezone, setInnerTimezone] = createSignal<SelectDataSourceItem>({ key: props.timezone, text: translateTimezone(props.timezone, props.locale) })
+  const [timezone, setTimezone] = createSignal<SelectDataSourceItem>({ key: props.defaultTimezone, text: translateTimezone(props.defaultTimezone, props.locale) })
 
   const [settingModalVisible, setSettingModalVisible] = createSignal(false)
 
@@ -89,42 +93,157 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
     setSubIndicators(subIndicatorMap)
     widget?.loadMore(timestamp => {
       loading = true
-      props.loadData?.(
-        { symbol: props.symbol, period: currentPeriod(), timestamp },
-        (dataList, more) => {
-          widget?.applyMoreData(dataList, more)
-          loading = false
-        },
-        () => { loading = false }
+      componentOptions.element.dispatchEvent(
+        new CustomEvent<LoadDataEventDetail>(
+          'loadData',
+          {
+            detail: {
+              symbol: props.symbol,
+              period: currentPeriod(),
+              timestamp,
+              successCallback: (dataList: KLineData[], more: boolean) => {
+                widget?.applyMoreData(dataList, more)
+                loading = false
+              },
+              errorCallback: () => { loading = false }
+            },
+          }
+        )
       )
     })
   })
 
   createEffect(() => {
     const period = currentPeriod()
-    if (props.networkState === 'ok' && !loading) {
+    if (props.networkState === 'ok' && !loading && props.symbol) {
       const symbol = props.symbol
       loading = true
-      props.loadData?.(
-        { symbol, period, timestamp: null },
-        (dataList, more) => {
-          widget?.applyNewData(dataList, more)
-          props.updateData?.({ symbol, period }, data => {
-            widget?.updateData(data)
-          })
-          loading = false
-        },
-        () => { loading = false }
+      componentOptions.element.dispatchEvent(
+        new CustomEvent<LoadDataEventDetail>(
+          'loadData',
+          {
+            detail: {
+              symbol,
+              period,
+              timestamp: null,
+              successCallback: (dataList: KLineData[], more: boolean) => {
+                widget?.applyNewData(dataList, more)
+                componentOptions.element.dispatchEvent(
+                  new CustomEvent<UpdateDataEventDetail>(
+                    'updateData',
+                    {
+                      detail: {
+                        symbol,
+                        period,
+                        callback: (data: KLineData) => {
+                          widget?.updateData(data)
+                        }
+                      }
+                    }
+                  )
+                )
+                loading = false
+              },
+              errorCallback: () => { loading = false }
+              }
+          }
+        )
       )
     }
   })
 
   createEffect(() => {
     widget?.setStyles(props.theme)
+    const color = props.theme === 'dark' ? '#929AA5' : '76808F'
+    console.log(color)
+    widget?.setStyles({
+      indicator: {
+        tooltip: {
+          icons: [
+            {
+              id: 'visible',
+              position: TooltipIconPosition.Middle,
+              marginLeft: 10,
+              marginTop: 6,
+              marginRight: 0,
+              marginBottom: 0,
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingRight: 1,
+              paddingBottom: 1,
+              icon: '\ue903',
+              fontFamily: 'icomoon',
+              size: 12,
+              color: color,
+              activeColor: color,
+              backgroundColor: 'transparent',
+              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+            },
+            {
+              id: 'invisible',
+              position: TooltipIconPosition.Middle,
+              marginLeft: 8,
+              marginTop: 6,
+              marginRight: 0,
+              marginBottom: 0,
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingRight: 1,
+              paddingBottom: 1,
+              icon: '\ue901',
+              fontFamily: 'icomoon',
+              size: 12,
+              color: color,
+              activeColor: color,
+              backgroundColor: 'transparent',
+              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+            },
+            {
+              id: 'close',
+              position: TooltipIconPosition.Middle,
+              marginLeft: 8,
+              marginTop: 6,
+              marginRight: 0,
+              marginBottom: 0,
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingRight: 1,
+              paddingBottom: 1,
+              icon: '\ue900',
+              fontFamily: 'icomoon',
+              size: 12,
+              color: color,
+              activeColor: color,
+              backgroundColor: 'transparent',
+              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+            },
+            {
+              id: 'setting',
+              position: TooltipIconPosition.Middle,
+              marginLeft: 8,
+              marginTop: 6,
+              marginRight: 0,
+              marginBottom: 0,
+              paddingLeft: 1,
+              paddingTop: 1,
+              paddingRight: 1,
+              paddingBottom: 1,
+              icon: '\ue902',
+              fontFamily: 'icomoon',
+              size: 12,
+              color: color,
+              activeColor: color,
+              backgroundColor: 'transparent',
+              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+            }
+          ]
+        }
+      }
+    })
   })
 
   createEffect(() => {
-    setInnerTimezone({ key: props.timezone, text: translateTimezone(props.timezone, props.locale) })
+    widget?.setTimezone(timezone().key)
   })
 
   return (
@@ -132,6 +251,7 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
       style={props.style}
       class={`klinecharts-pro ${props.class}`}
       data-theme={props.theme}>
+      <i class="icon-close klinecharts-pro-load-icon"/>
       <style>{styles}</style>
       <Show when={indicatorModalVisible()}>
         <IndicatorModal
@@ -171,9 +291,9 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
       <Show when={timezoneModalVisible()}>
         <TimezoneModal
           locale={props.locale}
-          timezone={innerTimezone()}
+          timezone={timezone()}
           onClose={() => { setTimezoneModalVisible(false) }}
-          onConfirm={timezone => { setInnerTimezone(timezone) }}
+          onConfirm={timezone => { setTimezone(timezone) }}
         />
       </Show>
       <Show when={screenshotUrl().length > 0}>
@@ -203,7 +323,9 @@ const KLineChartPro: Component<KLineChartProProps> = (props) => {
           locale={props.locale}
           onDrawingItemClick={overlay => { widget?.createOverlay(overlay) }}
           onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}
-          onLockChange={lock => { widget?.overrideOverlay({ lock }) }}/>
+          onLockChange={lock => { widget?.overrideOverlay({ lock }) }}
+          onVisibleChange={visible => { widget?.overrideOverlay({ visible }) }}
+          onRemoveClick={() => { widget?.removeOverlay() }}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>

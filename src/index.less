@@ -1,7 +1,7 @@
 @import (reference) './base.less';
 @import './component/index.less';
 @import './widget/index.less';
-// @import './iconfonts/style.css';
+@import './iconfonts/style.css';
 
 .@{prefix-cls} {
   --klinecharts-pro-primary-color: @c-primary;
@@ -25,6 +25,13 @@
   background-color: var(--klinecharts-pro-background-color);
   font-size: 14px;
   height: 80vh;
+  &-load-icon {
+    position: absolute;
+    left: 0;
+    height: 0;
+    z-index: -1;
+    opacity: 0;
+  }
   &-content {
     display: flex;
     flex-direction: row;

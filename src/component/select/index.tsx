@@ -55,7 +55,8 @@ const Select: Component<SelectProps> = props => {
                 const v = d[props.valueKey ?? 'text'] ?? data
                 return (
                   <li
-                    onClick={_ => {
+                    onClick={e => {
+                      e.stopPropagation()
                       if (props.value !== v) {
                         props.onSelected?.(data)
                       }

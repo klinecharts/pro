@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'solid-js'
+import { Component, from } from 'solid-js'
 
 import horizontalStraightLine from './horizontalStraightLine'
 import horizontalRayLine from './horizontalRayLine'
@@ -48,8 +48,13 @@ import xabcd from './xabcd'
 import weakMagnet from './weakMagnet'
 import strongMagnet from './strongMagnet'
 
+import visible from './visible'
+import invisible from './invisible'
+
 import lock from './lock'
 import unlock from './unlock'
+
+import remove from './remove'
 
 import type { SelectDataSourceItem } from '../../../component'
 
@@ -89,7 +94,10 @@ export const mapping = {
   weak_magnet: weakMagnet,
   strong_magnet: strongMagnet,
   lock,
-  unlock
+  unlock,
+  visible,
+  invisible,
+  remove
 }
 
 export function createSingleLineOptions (locale: string): SelectDataSourceItem[] {
@@ -160,4 +168,4 @@ interface IconProps {
 }
 
 // @ts-expect-error
-export const Icon: Component<IconProps> = props => { console.log(props.name); return mapping[props.name]() }
+export const Icon: Component<IconProps> = props => mapping[props.name](props.class)

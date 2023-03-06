@@ -29,6 +29,8 @@ export interface DrawingBarProps {
   onDrawingItemClick: (overlay: OverlayCreate) => void
   onModeChange: (mode: string) => void,
   onLockChange: (lock: boolean) => void
+  onVisibleChange: (visible: boolean) => void
+  onRemoveClick: () => void
 }
 
 const DrawingBar: Component<DrawingBarProps> = props => {
@@ -42,6 +44,8 @@ const DrawingBar: Component<DrawingBarProps> = props => {
   const [mode, setMode] = createSignal('normal')
 
   const [lock, setLock] = createSignal(false)
+
+  const [visible, setVisible] = createSignal(true)
 
   const [popoverKey, setPopoverKey] = createSignal('')
 
@@ -122,7 +126,11 @@ const DrawingBar: Component<DrawingBarProps> = props => {
             setMode(currentMode)
             props.onModeChange(currentMode)
           }}>
-          <Icon name={modeIcon()} />
+          {
+            modeIcon() === 'weak_magnet'
+              ? (mode() === 'weak_magnet' ? <Icon name="weak_magnet" class="selected"/> : <Icon name="weak_magnet"/>) 
+              : (mode() === 'strong_magnet' ? <Icon name="strong_magnet" class="selected"/> : <Icon name="strong_magnet"/>)
+          }
         </span>
         <div
           class="icon-arrow"
@@ -169,7 +177,32 @@ const DrawingBar: Component<DrawingBarProps> = props => {
             setLock(currentLock)
             props.onLockChange(currentLock)
           }}>
-          <Icon name={lock() ? 'lock' : 'unlock'} />
+          {
+            lock() ? <Icon name="lock"/> : <Icon name="unlock" />
+          }
+        </span>
+      </div>
+      <div
+        class="item">
+        <span
+          style="width:32px;height:32px"
+          onClick={() => {
+            const v = !visible()
+            setVisible(v)
+            props.onVisibleChange(v)
+          }}>
+          {
+            visible() ? <Icon name="visible" /> : <Icon name="invisible" />
+          }
+        </span>
+      </div>
+      <span class="split-line"/>
+      <div
+        class="item">
+        <span
+          style="width:32px;height:32px"
+          onClick={props.onRemoveClick}>
+          <Icon name="remove" />
         </span>
       </div>
     </div>

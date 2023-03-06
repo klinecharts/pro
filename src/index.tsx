@@ -22,7 +22,7 @@ customElement(
     theme: 'light',
     networkState: 'ok' as NetworkState,
     locale: 'zh-CN',
-    timezone: 'Asia/Shanghai',
+    defaultTimezone: 'Asia/Shanghai',
     symbol: '',
     defaultPeriod: '1m',
     periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],

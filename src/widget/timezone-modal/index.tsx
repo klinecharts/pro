@@ -37,7 +37,13 @@ const TimezoneModal: Component<TimezoneModalProps> = props => {
       title={i18n('timezone', props.locale)}
       width={320}
       buttons={[
-        { type: 'confirm', children: i18n('confirm', props.locale), onClick: () => { props.onConfirm(innerTimezone()) } }
+        {
+          children: i18n('confirm', props.locale),
+          onClick: () => {
+            props.onConfirm(innerTimezone())
+            props.onClose()
+          }
+        }
       ]}
       onClose={props.onClose}>
       <Select
