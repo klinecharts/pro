@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { OverlayTemplate, utils } from 'klinecharts'
+import { OverlayTemplate, utils, registerFigure } from 'klinecharts'
 
 import { getDistance, getRotateCoordinate, getRayLine } from './utils'
 
@@ -49,39 +49,39 @@ const fibonacciSpiral: OverlayTemplate = {
       )
       const arcs = [{
         ...rotateCoordinate1,
-        radius: startRadius,
+        r: startRadius,
         startAngle: offsetAngle,
         endAngle: offsetAngle + Math.PI / 2
       }, {
         ...rotateCoordinate2,
-        radius: startRadius * 2,
+        r: startRadius * 2,
         startAngle: offsetAngle + Math.PI / 2,
         endAngle: offsetAngle + Math.PI
       }]
       let x = coordinates[0].x - startRadius
       let y = coordinates[0].y - startRadius
       for (let i = 2; i < 9; i++) {
-        const radius = arcs[i - 2].radius + arcs[i - 1].radius
+        const r = arcs[i - 2].r + arcs[i - 1].r
         let startAngle = 0
         switch (i % 4) {
           case 0: {
             startAngle = offsetAngle
-            x -= (arcs[i - 2].radius)
+            x -= (arcs[i - 2].r)
             break
           }
           case 1: {
             startAngle = offsetAngle + Math.PI / 2
-            y -= arcs[i - 2].radius
+            y -= arcs[i - 2].r
             break
           }
           case 2: {
             startAngle = offsetAngle + Math.PI
-            x += (arcs[i - 2].radius)
+            x += (arcs[i - 2].r)
             break
           }
           case 3: {
             startAngle = offsetAngle + Math.PI / 2 * 3
-            y += arcs[i - 2].radius
+            y += arcs[i - 2].r
             break
           }
         }
@@ -89,7 +89,7 @@ const fibonacciSpiral: OverlayTemplate = {
         const rotateCoordinate = getRotateCoordinate({ x, y }, coordinates[0], offsetAngle)
         arcs.push({
           ...rotateCoordinate,
-          radius,
+          r,
           startAngle,
           endAngle
         })

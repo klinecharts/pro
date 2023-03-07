@@ -16,12 +16,15 @@ import { createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
 
 import { ComponentType } from 'solid-element'
 
-import { KLineData, Nullable, Chart, init, registerOverlay, OverlayMode, TooltipIconPosition } from 'klinecharts'
+import {
+  KLineData, Nullable, Chart, init, registerOverlay, OverlayMode,
+  TooltipIconPosition, ActionType, PaneOptions, Indicator
+} from 'klinecharts'
 
 import overlays from './extension'
 import { SelectDataSourceItem } from './component'
 
-import { PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal } from './widget'
+import { PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal, IndicatorSettingModal } from './widget'
 
 import { translateTimezone } from './widget/timezone-modal/data'
 
@@ -60,6 +63,29 @@ export interface KLineChartProProps {
 
 overlays.forEach(o => { registerOverlay(o) })
 
+function createIndicator (widget: Nullable<Chart>, indicatorName: string, isStack?: boolean, paneOptions?: PaneOptions): Nullable<string> {
+  if (indicatorName === 'VOL') {
+    paneOptions = { gap: { bottom: 2 }, ...paneOptions }
+  }
+  return widget?.createIndicator({
+    name: indicatorName,
+    // @ts-expect-error
+    createTooltipDataSource: ({ indicator, defaultStyles }) => {
+      const icons = []
+      if (indicator.visible) {
+        icons.push(defaultStyles.tooltip.icons[1])
+        icons.push(defaultStyles.tooltip.icons[2])
+        icons.push(defaultStyles.tooltip.icons[3])
+      } else {
+        icons.push(defaultStyles.tooltip.icons[0])
+        icons.push(defaultStyles.tooltip.icons[2])
+        icons.push(defaultStyles.tooltip.icons[3])
+      }
+      return { icons }
+    }
+  }, isStack, paneOptions) ?? null
+}
+
 const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOptions) => {
   let widgetRef: HTMLDivElement | undefined = undefined
   let widget: Nullable<Chart> = null
@@ -77,14 +103,18 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
 
   const [screenshotUrl, setScreenshotUrl] = createSignal('')
 
+  const [indicatorSettingModalParams, setIndicatorSettingModalParams] = createSignal({
+    visible: false, indicatorName: '', paneId: '', calcParams: [] as Array<any>
+  })
+
   onMount(() => {
     widget = init(widgetRef!)
     mainIndicators().forEach(indicator => {
-      widget?.createIndicator(indicator, true, { id: 'candle_pane' })
+      createIndicator(widget, indicator, true, { id: 'candle_pane' })
     })
     const subIndicatorMap = {}
     props.defaultSubIndicators.forEach(indicator => {
-      const paneId = widget?.createIndicator(indicator, true)
+      const paneId = createIndicator(widget, indicator, true)
       if (paneId) {
         // @ts-expect-error
         subIndicatorMap[indicator] = paneId
@@ -110,6 +140,41 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           }
         )
       )
+    })
+    widget?.subscribeAction(ActionType.OnTooltipIconClick, (data) => {
+      if (data.indicatorName) {
+        switch (data.iconId) {
+          case 'visible': {
+            widget?.overrideIndicator({ name: data.indicatorName, visible: true }, data.paneId)
+            break
+          }
+          case 'invisible': {
+            widget?.overrideIndicator({ name: data.indicatorName, visible: false }, data.paneId)
+            break
+          }
+          case 'setting': {
+            const indicator = widget?.getIndicatorByPaneId(data.paneId, data.indicatorName) as Indicator
+            setIndicatorSettingModalParams({
+              visible: true, indicatorName: data.indicatorName, paneId: data.paneId, calcParams: indicator.calcParams
+            })
+            break
+          }
+          case 'close': {
+            if (data.paneId === 'candle_pane') {
+              const newMainIndicators = [...mainIndicators()]
+              widget?.removeIndicator('candle_pane', data.indicatorName)
+              newMainIndicators.splice(newMainIndicators.indexOf(data.indicatorName), 1)
+              setMainIndicators(newMainIndicators)
+            } else {
+              const newIndicators = { ...subIndicators() }
+              widget?.removeIndicator(data.paneId, data.indicatorName)
+              // @ts-expect-error
+              delete newSubIndicators[data.indicatorName]
+              setSubIndicators(newIndicators)
+            }
+          }
+        }
+      }
     })
   })
 
@@ -154,8 +219,7 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
 
   createEffect(() => {
     widget?.setStyles(props.theme)
-    const color = props.theme === 'dark' ? '#929AA5' : '76808F'
-    console.log(color)
+    const color = props.theme === 'dark' ? '#929AA5' : '#76808F'
     widget?.setStyles({
       indicator: {
         tooltip: {
@@ -163,83 +227,87 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
             {
               id: 'visible',
               position: TooltipIconPosition.Middle,
-              marginLeft: 10,
-              marginTop: 6,
+              marginLeft: 8,
+              marginTop: 7,
               marginRight: 0,
               marginBottom: 0,
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingRight: 1,
-              paddingBottom: 1,
+              paddingLeft: 0,
+              paddingTop: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
               icon: '\ue903',
               fontFamily: 'icomoon',
-              size: 12,
+              size: 14,
               color: color,
               activeColor: color,
               backgroundColor: 'transparent',
-              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+              activeBackgroundColor: 'rgba(22, 119, 255, 0.15)'
             },
             {
               id: 'invisible',
               position: TooltipIconPosition.Middle,
               marginLeft: 8,
-              marginTop: 6,
+              marginTop: 7,
               marginRight: 0,
               marginBottom: 0,
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingRight: 1,
-              paddingBottom: 1,
+              paddingLeft: 0,
+              paddingTop: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
               icon: '\ue901',
               fontFamily: 'icomoon',
-              size: 12,
+              size: 14,
               color: color,
               activeColor: color,
               backgroundColor: 'transparent',
-              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
-            },
-            {
-              id: 'close',
-              position: TooltipIconPosition.Middle,
-              marginLeft: 8,
-              marginTop: 6,
-              marginRight: 0,
-              marginBottom: 0,
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingRight: 1,
-              paddingBottom: 1,
-              icon: '\ue900',
-              fontFamily: 'icomoon',
-              size: 12,
-              color: color,
-              activeColor: color,
-              backgroundColor: 'transparent',
-              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+              activeBackgroundColor: 'rgba(22, 119, 255, 0.15)'
             },
             {
               id: 'setting',
               position: TooltipIconPosition.Middle,
-              marginLeft: 8,
-              marginTop: 6,
-              marginRight: 0,
+              marginLeft: 6,
+              marginTop: 7,
               marginBottom: 0,
-              paddingLeft: 1,
-              paddingTop: 1,
-              paddingRight: 1,
-              paddingBottom: 1,
+              marginRight: 0,
+              paddingLeft: 0,
+              paddingTop: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
               icon: '\ue902',
               fontFamily: 'icomoon',
-              size: 12,
+              size: 14,
               color: color,
               activeColor: color,
               backgroundColor: 'transparent',
-              activeBackgroundColor: 'rgba(33, 150, 243, 0.15)'
+              activeBackgroundColor: 'rgba(22, 119, 255, 0.15)'
+            },
+            {
+              id: 'close',
+              position: TooltipIconPosition.Middle,
+              marginLeft: 6,
+              marginTop: 7,
+              marginRight: 0,
+              marginBottom: 0,
+              paddingLeft: 0,
+              paddingTop: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
+              icon: '\ue900',
+              fontFamily: 'icomoon',
+              size: 14,
+              color: color,
+              activeColor: color,
+              backgroundColor: 'transparent',
+              activeBackgroundColor: 'rgba(22, 119, 255, 0.15)'
             }
           ]
         }
       }
     })
+  })
+
+  createEffect(() => {
+    widget?.setLocale(props.locale)
   })
 
   createEffect(() => {
@@ -262,18 +330,18 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           onMainIndicatorChange={data => {
             const newMainIndicators = [...mainIndicators()]
             if (data.added) {
-              widget?.createIndicator(data.name, true, { id: 'candle_pane' })
+              createIndicator(widget, data.name, true, { id: 'candle_pane' })
               newMainIndicators.push(data.name)
             } else {
               widget?.removeIndicator('candle_pane', data.name)
-              newMainIndicators.splice(newMainIndicators.indexOf(data.name), 1);
+              newMainIndicators.splice(newMainIndicators.indexOf(data.name), 1)
             }
             setMainIndicators(newMainIndicators)
           }}
           onSubIndicatorChange={data => {
             const newSubIndicators = { ...subIndicators() }
             if (data.added) {
-              const paneId = widget?.createIndicator(data.name)
+              const paneId = createIndicator(widget, data.name)
               if (paneId) {
                 // @ts-expect-error
                 newSubIndicators[data.name] = paneId
@@ -303,6 +371,17 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           onClose={() => { setScreenshotUrl('') }}
         />
       </Show>
+      <Show when={indicatorSettingModalParams().visible}>
+        <IndicatorSettingModal
+          locale={props.locale}
+          params={indicatorSettingModalParams()}
+          onClose={() => { setIndicatorSettingModalParams({ visible: false, indicatorName: '', paneId: '', calcParams: [] }) }}
+          onConfirm={(params)=> {
+            const modalParams = indicatorSettingModalParams()
+            widget?.overrideIndicator({ name: modalParams.indicatorName, calcParams: params }, modalParams.paneId)
+          }}
+        />
+      </Show>
       <PeriodBar
         locale={props.locale}
         period={currentPeriod()}
@@ -325,7 +404,7 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}
           onLockChange={lock => { widget?.overrideOverlay({ lock }) }}
           onVisibleChange={visible => { widget?.overrideOverlay({ visible }) }}
-          onRemoveClick={() => { widget?.removeOverlay() }}/>
+          onRemoveClick={(groupId) => { widget?.removeOverlay({ groupId }) }}/>
         <div ref={widgetRef} class='klinecharts-pro-widget'></div>
       </div>
     </div>

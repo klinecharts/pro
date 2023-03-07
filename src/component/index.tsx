@@ -17,9 +17,10 @@ import Checkbox from './checkbox'
 import List from './list'
 import Modal from './modal'
 import Select, { SelectDataSourceItem } from './select'
+import Input from './input'
 
 export {
-  Button, Checkbox, List, Modal, Select
+  Button, Checkbox, List, Modal, Select, Input
 }
 
 export type { SelectDataSourceItem }

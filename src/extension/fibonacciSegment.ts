@@ -29,11 +29,11 @@ const fibonacciSegment: OverlayTemplate = {
       const yDif = coordinates[0].y - coordinates[1].y
       const points = overlay.points
       // @ts-expect-error
-      const priceDif = points[0].price - points[1].price
+      const valueDif = points[0].value - points[1].value
       percents.forEach(percent => {
         const y = coordinates[1].y + yDif * percent
         // @ts-expect-error
-        const price = (points[1].price + priceDif * percent).toFixed(precision.price)
+        const price = (points[1].value + valueDif * percent).toFixed(precision.price)
         lines.push({ coordinates: [{ x: coordinates[0].x, y }, { x: coordinates[1].x, y }] })
         texts.push({
           x: textX,

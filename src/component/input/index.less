@@ -1,0 +1,16 @@
+@import (reference) '../../base.less';
+
+.@{prefix-cls}-input {
+  cursor: pointer;
+  height: 34px;
+  color: var(--klinecharts-pro-text-color);
+  font-size: 14px;
+  border: solid 1px var(--klinecharts-pro-border-color);
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  outline: none;
+  &:focus {
+    border-color: var(--klinecharts-pro-primary-color);
+  }
+}

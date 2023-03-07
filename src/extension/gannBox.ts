@@ -20,6 +20,11 @@ const gannBox: OverlayTemplate = {
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
+  styles: {
+    polygon: {
+      color: 'rgba(22, 119, 255, 0.15)'
+    }
+  },
   createPointFigures: ({ coordinates }) => {
     if (coordinates.length > 1) {
       const quarterYDis = (coordinates[1].y - coordinates[0].y) / 4

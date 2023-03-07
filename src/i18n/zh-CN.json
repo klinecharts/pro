@@ -87,5 +87,10 @@
   "xabcd": "XABCD形态",
 
   "weak_magnet": "弱磁模式",
-  "strong_magnet": "强磁模式"
+  "strong_magnet": "强磁模式",
+
+  "params_1": "参数1",
+  "params_2": "参数2",
+  "period": "周期",
+  "standard_deviation": "标准差"
 }

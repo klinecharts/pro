@@ -20,7 +20,12 @@ const xabcd: OverlayTemplate = {
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
-  createPointFigures: ({ coordinates }) => {
+  styles: {
+    polygon: {
+      color: 'rgba(22, 119, 255, 0.15)'
+    }
+  },
+  createPointFigures: ({ coordinates, overlay }) => {
     const dashedLines: LineAttrs[] = []
     const polygons: PolygonAttrs[] = []
     const tags = ['X', 'A', 'B', 'C', 'D']

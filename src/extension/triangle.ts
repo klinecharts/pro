@@ -20,6 +20,11 @@ const triangle: OverlayTemplate = {
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
+  styles: {
+    polygon: {
+      color: 'rgba(22, 119, 255, 0.15)'
+    }
+  },
   createPointFigures: ({ coordinates }) => {
     return [
       {

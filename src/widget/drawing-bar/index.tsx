@@ -30,8 +30,10 @@ export interface DrawingBarProps {
   onModeChange: (mode: string) => void,
   onLockChange: (lock: boolean) => void
   onVisibleChange: (visible: boolean) => void
-  onRemoveClick: () => void
+  onRemoveClick: (groupId: string) => void
 }
+
+const GROUP_ID = 'drawing_tools'
 
 const DrawingBar: Component<DrawingBarProps> = props => {
   const [singleLineIcon, setSingleLineIcon] = createSignal('horizontalStraightLine')
@@ -72,7 +74,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
             onBlur={() => { setPopoverKey('') }}>
             <span
               style="width:32px;height:32px"
-              onClick={() => { props.onDrawingItemClick({ name: item.icon, lock: lock(), mode: mode() as OverlayMode }) }}>
+              onClick={() => { props.onDrawingItemClick({ groupId: GROUP_ID, name: item.icon, visible: visible(), lock: lock(), mode: mode() as OverlayMode }) }}>
               <Icon name={item.icon} />
             </span>
             <div
@@ -201,7 +203,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
         class="item">
         <span
           style="width:32px;height:32px"
-          onClick={props.onRemoveClick}>
+          onClick={() => { props.onRemoveClick(GROUP_ID) }}>
           <Icon name="remove" />
         </span>
       </div>
