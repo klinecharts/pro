@@ -29,6 +29,23 @@
       }
     }
   }
+  .symbol {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    font-size: 18px;
+    padding: 0 12px;
+    font-weight: bold;
+    box-sizing: border-box;
+    border-right: solid 1px var(--klinecharts-pro-border-color);
+    cursor: pointer;
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+  }
   .item {
     transition: all 0.2s;
     box-sizing: border-box;
@@ -50,8 +67,8 @@
       margin-left: 8px;
     }
   }
-  .menu-container + .period {
-    margin-left: 10px;
+  .symbol + .period, .menu-container + .period {
+    margin-left: 12px;
   }
   .tools {
     display: flex;

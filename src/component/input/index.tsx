@@ -12,11 +12,13 @@
  * limitations under the License.
  */
 
-import { JSX, Component, mergeProps } from 'solid-js'
+import { JSX, Component, mergeProps, Show, createSignal } from 'solid-js'
 
 export interface InputProps {
   class?: string
   style?: JSX.CSSProperties
+  prefix?: JSX.Element
+  suffix?: JSX.Element
   precision?: number
   min?: number
   max?: number
@@ -28,32 +30,48 @@ export interface InputProps {
 
 const Input: Component<InputProps> = p => {
   const props = mergeProps({ min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER }, p)
+  let input: HTMLInputElement
+
+  const [status, setStatus] = createSignal('normal')
+
   return (
-    <input
+    <div
       style={props.style}
       class={`klinecharts-pro-input ${props.class ?? ''}`}
-      placeholder={props.placeholder}
-      value={props.value}
-      disabled={props.disabled}
-      onChange={e => {
-        // @ts-expect-error
-        const v = e.target.value
-        if ('precision' in props) {
-          let reg
-          const decimalDigit = Math.max(0, Math.ceil(props.precision ?? 0))
-          if (decimalDigit <= 0) {
-            reg = new RegExp(/^[1-9]\d*$/)
+      data-status={status()}
+      onClick={() => { input?.focus() }}>
+      <Show when={props.prefix}>
+        <span class="prefix">{props.prefix}</span>
+      </Show>  
+      <input
+        ref={(el) => { input = el }}
+        class="value"
+        placeholder={props.placeholder ?? ''}
+        value={props.value}
+        onFocus={() => { setStatus('focus') }}
+        onBlur={() => { setStatus('normal') }}
+        onChange={(e) => {
+          // @ts-expect-error
+          const v = e.target.value
+          if ('precision' in props) {
+            let reg
+            const decimalDigit = Math.max(0, Math.floor(props.precision!))
+            if (decimalDigit <= 0) {
+              reg = new RegExp(/^[1-9]\d*$/)
+            } else {
+              reg = new RegExp('^\\d+\\.?\\d{0,' + decimalDigit + '}$')
+            }
+            if (v === '' || (reg.test(v) && +v >= props.min && +v <= props.max)) {
+              props.onChange?.(v === '' ? v : +v)
+            }
           } else {
-            reg = new RegExp('^\\d+\\.?\\d{0,' + decimalDigit + '}$')
+            props.onChange?.(v)
           }
-          if (v === '' || (reg.test(v) && +v >= props.min && +v <= props.max)) {
-            props.onChange?.(v === '' ? v : +v)
-          }
-        } else {
-          props.onChange?.(v)
-        }
-      }}
-    />
+        }}/>
+      <Show when={props.suffix}>
+        <span class="suffix">{props.suffix}</span>
+      </Show>  
+    </div>
   )
 }
 

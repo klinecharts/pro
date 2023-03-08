@@ -13,7 +13,9 @@
  */
 
 import { customElement } from 'solid-element'
-import KLineChartPro, { NetworkState } from './KLineChartPro'
+import KLineChartPro from './KLineChartPro'
+
+import { NetworkState } from './types'
 
 customElement(
   'klinecharts-pro',
@@ -22,10 +24,12 @@ customElement(
     style: {},
     theme: 'light',
     networkState: 'ok' as NetworkState,
+    watermark: undefined,
     locale: 'zh-CN',
+    defaultDrawingBarVisible: true,
     defaultTimezone: 'Asia/Shanghai',
     timezone: undefined,
-    defaultSymbol: '',
+    defaultSymbol: undefined,
     symbol: undefined,
     defaultPeriod: '1m',
     period: undefined,

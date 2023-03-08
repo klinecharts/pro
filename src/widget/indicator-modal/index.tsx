@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { Component } from 'solid-js'
+import { Component, createMemo } from 'solid-js'
 
 import { Modal, List, Checkbox } from '../../component'
 
@@ -36,12 +36,14 @@ export interface IndicatorModalProps {
 }
 
 const IndicatorModal: Component<IndicatorModalProps> = props => {
+
   return (
     <Modal
       title={i18n('indicator', props.locale)}
       width={400}
       onClose={props.onClose}>
-      <List class="klinecharts-pro-indicator-modal-list">
+      <List
+        class="klinecharts-pro-indicator-modal-list">
         <li class="title">{i18n('main_indicator', props.locale)}</li>
         {
           [

@@ -18,7 +18,8 @@ import IndicatorModal from './indicator-modal'
 import TimezoneModal from './timezone-modal'
 import ScreenshotModal from './screenshot-modal'
 import IndicatorSettingModal from './indicator-setting-modal'
+import SymbolSearchModal from './symbol-search-modal'
 
 export {
-  PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal, IndicatorSettingModal
+  PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal, IndicatorSettingModal, SymbolSearchModal
 }

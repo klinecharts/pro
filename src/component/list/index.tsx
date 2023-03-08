@@ -12,13 +12,17 @@
  * limitations under the License.
  */
 
-import { ParentComponent, ParentProps, JSX } from 'solid-js'
+import { ParentComponent, ParentProps, JSX, Show } from 'solid-js'
 
-export type ButtonType = 'confirm' | 'cancel'
+import Loading from '../loading'
+import Empty from '../empty'
 
 export interface ListProps extends ParentProps {
   class?: string
   style?: JSX.CSSProperties | string
+  loading?: boolean
+  dataSource?: any[]
+  renderItem?: (data: any) => JSX.Element
 }
 
 const List: ParentComponent<ListProps> = props => {
@@ -26,7 +30,24 @@ const List: ParentComponent<ListProps> = props => {
     <ul
       style={props.style}
       class={`klinecharts-pro-list ${props.class ?? ''}`}>
-      {props.children}
+      <Show when={props.loading}>
+        <Loading/>
+      </Show>
+      <Show when={!props.loading && !props.children && !props.dataSource?.length}>
+        <Empty/>
+      </Show>
+      <Show
+        when={props.children}>
+        {props.children}
+      </Show>
+      <Show
+        when={!props.children}>
+        {
+          props.dataSource?.map(data => (
+            props.renderItem?.(data) ?? <li></li>
+          ))
+        }
+      </Show>
     </ul>
   )
 }
