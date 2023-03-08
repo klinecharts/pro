@@ -18,8 +18,10 @@ import i18n from '../../i18n'
 
 export interface PeriodBarProps {
   locale: string
+  spread: boolean
   period: string
   periods: string[]
+  onMenuClick: () => void
   onPeriodChange: (period: string) => void
   onIndicatorClick: () => void
   onTimezoneClick: () => void
@@ -27,11 +29,18 @@ export interface PeriodBarProps {
   onScreenshotClick: () => void
 }
 
-const PeriodBar: Component<PeriodBarProps> = (props) => {
+const PeriodBar: Component<PeriodBarProps> = props => {
   return (
     <div
       class="klinecharts-pro-period-bar">
-      <div class='logo-container'></div>
+      <div class='menu-container'>
+        <svg
+          class={props.spread ? '' : 'rotate'}
+          viewBox="0 0 1024 1024"
+          onClick={props.onMenuClick}>
+          <path d="M192.037 287.953h640.124c17.673 0 32-14.327 32-32s-14.327-32-32-32H192.037c-17.673 0-32 14.327-32 32s14.327 32 32 32zM832.161 479.169H438.553c-17.673 0-32 14.327-32 32s14.327 32 32 32h393.608c17.673 0 32-14.327 32-32s-14.327-32-32-32zM832.161 735.802H192.037c-17.673 0-32 14.327-32 32s14.327 32 32 32h640.124c17.673 0 32-14.327 32-32s-14.327-32-32-32zM319.028 351.594l-160 160 160 160z"/>
+        </svg>
+      </div>
       {
         props.periods.map(p => (
           <span

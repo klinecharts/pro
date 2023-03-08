@@ -101,6 +101,7 @@ const DrawingBar: Component<DrawingBarProps> = props => {
                         onClick={() => {
                           item.setter(data.key)
                           props.onDrawingItemClick({ name: data.key, lock: lock(), mode: mode() as OverlayMode })
+                          setPopoverKey('')
                         }}>
                         <Icon name={data.key}/>
                         <span style="padding-left:8px">{data.text}</span>

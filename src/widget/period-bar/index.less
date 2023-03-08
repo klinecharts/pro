@@ -8,7 +8,7 @@
   width: 100%;
   box-sizing: border-box;
   border-bottom: solid 1px var(--klinecharts-pro-border-color);
-  .logo-container {
+  .menu-container {
     display: flex;
     height: 100%;
     flex-direction: row;
@@ -17,6 +17,17 @@
     width: @drawing-bar-width;
     box-sizing: border-box;
     border-right: solid 1px var(--klinecharts-pro-border-color);
+    svg {
+      fill: var(--klinecharts-pro-text-color);
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      transition: all .2s;
+      &.rotate {
+        transform: rotate(180deg);
+        transform-origin: center;
+      }
+    }
   }
   .item {
     transition: all 0.2s;
@@ -39,7 +50,7 @@
       margin-left: 8px;
     }
   }
-  .logo-container + .period {
+  .menu-container + .period {
     margin-left: 10px;
   }
   .tools {

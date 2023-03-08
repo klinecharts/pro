@@ -9,6 +9,7 @@
   --klinecharts-pro-background-color: @c-background-light;
   --klinecharts-pro-popover-background-color: @c-popover-background-light;
   --klinecharts-pro-text-color: @c-text-light;
+  --klinecharts-pro-text-second-color: @c-text-second-light;
   --klinecharts-pro-border-color: @c-border-light;
   --klinecharts-pro-selected-color: fade(@c-primary, 15%);
   &[data-theme="dark"] {
@@ -16,6 +17,7 @@
     --klinecharts-pro-background-color: @c-background-dark;
     --klinecharts-pro-popover-background-color: @c-popover-background-dark;
     --klinecharts-pro-text-color: @c-text-dark;
+    --klinecharts-pro-text-second-color: @c-text-second-dark;
     --klinecharts-pro-border-color: @c-border-dark;
   }
   position: relative;
@@ -33,6 +35,7 @@
     opacity: 0;
   }
   &-content {
+    position: relative;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -41,5 +44,8 @@
   &-widget {
     width: @widget-width;
     height: 100%;
+    &[data-drawing-bar-visible="false"] {
+      width: 100%;
+    }
   }
 }

@@ -12,17 +12,17 @@
  * limitations under the License.
  */
 
-import { createSignal, createEffect, onMount, JSX, Show } from 'solid-js'
+import { createSignal, createEffect, onMount, JSX, Show, onCleanup, startTransition } from 'solid-js'
 
 import { ComponentType } from 'solid-element'
 
 import {
   KLineData, Nullable, Chart, init, registerOverlay, OverlayMode,
-  TooltipIconPosition, ActionType, PaneOptions, Indicator
+  TooltipIconPosition, ActionType, PaneOptions, Indicator, dispose
 } from 'klinecharts'
 
 import overlays from './extension'
-import { SelectDataSourceItem } from './component'
+import { SelectDataSourceItem, Loading } from './component'
 
 import { PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, ScreenshotModal, IndicatorSettingModal } from './widget'
 
@@ -53,10 +53,13 @@ export interface KLineChartProProps {
   theme: string
   locale: string
   networkState: NetworkState
-  symbol: string
+  defaultSymbol: string 
+  symbol?: string
   defaultPeriod: string
+  period?: string
   periods: string[]
   defaultTimezone: string
+  timezone?: string
   defaultMainIndicators: string[]
   defaultSubIndicators: string[]
 }
@@ -91,17 +94,21 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
   let widget: Nullable<Chart> = null
   let loading = false
 
-  const [currentPeriod, setCurrentPeriod] = createSignal(props.defaultPeriod)
+  const [loadingVisible, setLoadingVisible] = createSignal(false)
+  const [currentSymbol, setCurrentSymbol] = createSignal(props.symbol ?? props.defaultSymbol)
+  const [currentPeriod, setCurrentPeriod] = createSignal(props.period ?? props.defaultPeriod)
   const [indicatorModalVisible, setIndicatorModalVisible] = createSignal(false)
-  const [mainIndicators, setMainIndicators] = createSignal([...(props.defaultMainIndicators)])
+  const [mainIndicators, setMainIndicators] = createSignal([...(props.defaultMainIndicators!)])
   const [subIndicators, setSubIndicators] = createSignal({})
 
   const [timezoneModalVisible, setTimezoneModalVisible] = createSignal(false)
-  const [timezone, setTimezone] = createSignal<SelectDataSourceItem>({ key: props.defaultTimezone, text: translateTimezone(props.defaultTimezone, props.locale) })
+  const [currentTimezone, setCurrentTimezone] = createSignal<SelectDataSourceItem>({ key: props.timezone ?? props.defaultTimezone, text: translateTimezone(props.defaultTimezone ?? props.timezone ?? 'Asia/Shanghai', props.locale!) })
 
   const [settingModalVisible, setSettingModalVisible] = createSignal(false)
 
   const [screenshotUrl, setScreenshotUrl] = createSignal('')
+
+  const [drawingBarVisible, setDrawingBarVisible] = createSignal(true)
 
   const [indicatorSettingModalParams, setIndicatorSettingModalParams] = createSignal({
     visible: false, indicatorName: '', paneId: '', calcParams: [] as Array<any>
@@ -113,7 +120,7 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
       createIndicator(widget, indicator, true, { id: 'candle_pane' })
     })
     const subIndicatorMap = {}
-    props.defaultSubIndicators.forEach(indicator => {
+    props.defaultSubIndicators!.forEach(indicator => {
       const paneId = createIndicator(widget, indicator, true)
       if (paneId) {
         // @ts-expect-error
@@ -128,14 +135,16 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           'loadData',
           {
             detail: {
-              symbol: props.symbol,
+              symbol: currentSymbol(),
               period: currentPeriod(),
               timestamp,
               successCallback: (dataList: KLineData[], more: boolean) => {
                 widget?.applyMoreData(dataList, more)
                 loading = false
               },
-              errorCallback: () => { loading = false }
+              errorCallback: () => {
+                loading = false
+              }
             },
           }
         )
@@ -169,7 +178,7 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
               const newIndicators = { ...subIndicators() }
               widget?.removeIndicator(data.paneId, data.indicatorName)
               // @ts-expect-error
-              delete newSubIndicators[data.indicatorName]
+              delete newIndicators[data.indicatorName]
               setSubIndicators(newIndicators)
             }
           }
@@ -178,11 +187,16 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
     })
   })
 
+  onCleanup(() => {
+    dispose(widgetRef!)
+  })
+
   createEffect(() => {
     const period = currentPeriod()
-    if (props.networkState === 'ok' && !loading && props.symbol) {
-      const symbol = props.symbol
+    const symbol = currentSymbol()
+    if (props.networkState === 'ok' && !loading && symbol) {
       loading = true
+      setLoadingVisible(true)
       componentOptions.element.dispatchEvent(
         new CustomEvent<LoadDataEventDetail>(
           'loadData',
@@ -208,9 +222,13 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
                   )
                 )
                 loading = false
+                setLoadingVisible(false)
               },
-              errorCallback: () => { loading = false }
+              errorCallback: () => {
+                loading = false
+                setLoadingVisible(false)
               }
+            }
           }
         )
       )
@@ -307,11 +325,26 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
   })
 
   createEffect(() => {
+    if (props.timezone) {
+      setCurrentTimezone({
+        key: props.timezone,
+        text: translateTimezone(props.timezone, props.locale!)
+      })
+    }
+  })
+
+  createEffect(() => {
     widget?.setLocale(props.locale)
   })
 
   createEffect(() => {
-    widget?.setTimezone(timezone().key)
+    widget?.setTimezone(currentTimezone().key)
+  })
+
+  createEffect(()=> {
+    if (props.symbol) {
+      setCurrentSymbol(props.symbol)
+    }
   })
 
   return (
@@ -359,9 +392,9 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
       <Show when={timezoneModalVisible()}>
         <TimezoneModal
           locale={props.locale}
-          timezone={timezone()}
+          timezone={currentTimezone()}
           onClose={() => { setTimezoneModalVisible(false) }}
-          onConfirm={timezone => { setTimezone(timezone) }}
+          onConfirm={timezone => { setCurrentTimezone(timezone) }}
         />
       </Show>
       <Show when={screenshotUrl().length > 0}>
@@ -384,8 +417,16 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
       </Show>
       <PeriodBar
         locale={props.locale}
+        spread={drawingBarVisible()}
         period={currentPeriod()}
         periods={props.periods}
+        onMenuClick={async () => {
+          try {
+            await startTransition(() => setDrawingBarVisible(!drawingBarVisible()))
+            widget?.resize()
+          } catch (e) {}
+          
+        }}
         onPeriodChange={setCurrentPeriod}
         onIndicatorClick={() => { setIndicatorModalVisible((visible => !visible)) }}
         onTimezoneClick={() => { setTimezoneModalVisible((visible => !visible)) }}
@@ -397,15 +438,24 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
           }
         }}
       />
-      <div class="klinecharts-pro-content">
-        <DrawingBar
-          locale={props.locale}
-          onDrawingItemClick={overlay => { widget?.createOverlay(overlay) }}
-          onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}
-          onLockChange={lock => { widget?.overrideOverlay({ lock }) }}
-          onVisibleChange={visible => { widget?.overrideOverlay({ visible }) }}
-          onRemoveClick={(groupId) => { widget?.removeOverlay({ groupId }) }}/>
-        <div ref={widgetRef} class='klinecharts-pro-widget'></div>
+      <div
+        class="klinecharts-pro-content">
+        <Show when={loadingVisible()}>
+          <Loading/>
+        </Show>
+        <Show when={drawingBarVisible()}>
+          <DrawingBar
+            locale={props.locale}
+            onDrawingItemClick={overlay => { widget?.createOverlay(overlay) }}
+            onModeChange={mode => { widget?.overrideOverlay({ mode: mode as OverlayMode }) }}
+            onLockChange={lock => { widget?.overrideOverlay({ lock }) }}
+            onVisibleChange={visible => { widget?.overrideOverlay({ visible }) }}
+            onRemoveClick={(groupId) => { widget?.removeOverlay({ groupId }) }}/>
+        </Show>
+        <div
+          ref={widgetRef}
+          class='klinecharts-pro-widget'
+          data-drawing-bar-visible={drawingBarVisible()}/>
       </div>
     </div>
   )

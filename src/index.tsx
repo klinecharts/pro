@@ -16,15 +16,19 @@ import { customElement } from 'solid-element'
 import KLineChartPro, { NetworkState } from './KLineChartPro'
 
 customElement(
-  'klinecharts-pro', 
+  'klinecharts-pro',
   {
     class: '',
+    style: {},
     theme: 'light',
     networkState: 'ok' as NetworkState,
     locale: 'zh-CN',
     defaultTimezone: 'Asia/Shanghai',
-    symbol: '',
+    timezone: undefined,
+    defaultSymbol: '',
+    symbol: undefined,
     defaultPeriod: '1m',
+    period: undefined,
     periods: ['1m', '5m', '15m', '1H', '2H', '4H', 'D', 'W', 'M', 'Y'],
     defaultMainIndicators: [] as string[],
     defaultSubIndicators: [] as string[]
