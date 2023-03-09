@@ -14,19 +14,20 @@
 
 import { Component, Show } from 'solid-js'
 
-import { SymbolInfo } from '../../types'
+import { SymbolInfo, Period } from '../../types'
 
 import i18n from '../../i18n'
 
 export interface PeriodBarProps {
   locale: string
   spread: boolean
+  defaultSymbolLogo: string
   symbol?: SymbolInfo
-  period: string
-  periods: string[]
+  period: Period
+  periods: Period[]
   onMenuClick: () => void
   onSymbolClick: () => void
-  onPeriodChange: (period: string) => void
+  onPeriodChange: (period: Period) => void
   onIndicatorClick: () => void
   onTimezoneClick: () => void
   onSettingClick: () => void
@@ -49,18 +50,16 @@ const PeriodBar: Component<PeriodBarProps> = props => {
         <div
           class="symbol"
           onClick={props.onSymbolClick}>
-          <Show when={props.symbol?.logo}>
-            <img src={props.symbol?.logo}/>
-          </Show>
-          <span>{props.symbol?.name ?? props.symbol?.code}</span>
+          <img alt="symbol" src={props.symbol?.logo ?? props.defaultSymbolLogo}/>
+          <span>{props.symbol?.shortName ?? props.symbol?.name ?? props.symbol?.ticker}</span>
         </div>
       </Show>
       {
         props.periods.map(p => (
           <span
-            class={`item period ${p === props.period ? 'selected' : ''}`}
+            class={`item period ${p.text === props.period.text ? 'selected' : ''}`}
             onClick={() => { props.onPeriodChange(p) }}>
-            {p}
+            {p.text}
           </span>
         ))
       }

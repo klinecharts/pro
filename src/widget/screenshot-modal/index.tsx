@@ -28,7 +28,7 @@ const ScreenshotModal: Component<ScreenshotModalProps> = props => {
   return (
     <Modal
       title={i18n('screenshot', props.locale)}
-      width={500}
+      width={540}
       buttons={[
         {
           type: 'confirm',
@@ -44,7 +44,7 @@ const ScreenshotModal: Component<ScreenshotModalProps> = props => {
         }
       ]}
       onClose={props.onClose}>
-      <img style="width:460px;margin-top: 20px" src={props.url}/>
+      <img style="width:500px;margin-top: 20px" src={props.url}/>
     </Modal>
   )
 }

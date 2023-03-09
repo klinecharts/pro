@@ -31,8 +31,9 @@ import {
 
 import { translateTimezone } from './widget/timezone-modal/data'
 
-import { NetworkState, LoadDataEventDetail, UpdateDataEventDetail, SymbolInfo } from './types'
+import { NetworkState, LoadDataEventDetail, UpdateDataEventDetail, SymbolInfo, RequestParams, Period, TransformSymbol, TransformKLineData } from './types'
 
+import { DEFAULT_REQUREST_KLINE_URL } from './contants'
 // @ts-expect-error
 import styles from './index.less'
 
@@ -46,13 +47,18 @@ export interface KLineChartProProps {
   networkState: NetworkState
   defaultSymbol?: SymbolInfo
   symbol?: SymbolInfo
-  defaultPeriod: string
-  period?: string
-  periods: string[]
+  defaultPeriod: Period
+  period?: Period
+  periods: Period[]
   defaultTimezone: string
   timezone?: string
   defaultMainIndicators: string[]
-  defaultSubIndicators: string[]
+  defaultSubIndicators: string[],
+  defaultSymbolLogo: string
+  transformSymbol?: TransformSymbol
+  transformKLineData?: TransformKLineData
+  requestSymbolParams?: RequestParams
+  requestKLineDataParams?: RequestParams
 }
 
 overlays.forEach(o => { registerOverlay(o) })
@@ -121,6 +127,109 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
 
   const documentResize = () => {
     widget?.resize()
+  }
+
+  const queryKLine = async (requestParms: RequestParams | undefined, symbol: SymbolInfo, period: Period, timestamp?: number) => {
+    const params = requestParms ?? {}
+    const useDefault = !params.url || !params.url.startsWith('http')
+    let to = timestamp ?? new Date().getTime()
+    let from = to
+    const count = 500
+    switch (period.timespan) {
+      case 'minute': {
+        to = to - (to % (60 * 1000)) 
+        from = to - count * period.multiplier * 60 * 1000
+        break
+      }
+      case 'hour': {
+        to = to - (to % (60 * 60 * 1000))
+        from = to - count * period.multiplier * 60 * 60 * 1000
+        break
+      }
+      case 'day': {
+        to = to - (to % (60 * 60 * 1000))
+        from = to - count * period.multiplier * 24 * 60 * 60 * 1000
+        break
+      }
+      case 'week': {
+        const date = new Date(to)
+        const week = date.getDay()
+        const dif = week === 0 ? 6 : week - 1
+        to = to - dif * 60 * 60 * 24
+        const newDate = new Date(to)
+        to = new Date(`${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`).getTime()
+        from = count * period.multiplier * 7 * 24 * 60 * 60 * 1000
+        break
+      }
+      case 'month': {
+        const date = new Date(to)
+        const year = date.getFullYear()
+        const month = date.getMonth() + 1
+        to = new Date(`${year}-${month}-01`).getTime()
+        from = count * period.multiplier * 30 * 24 * 60 * 60 * 1000
+        const fromDate = new Date(from)
+        from = new Date(`${fromDate.getFullYear()}-${fromDate.getMonth() + 1}-01`).getTime()
+        break
+      }
+      case 'year': {
+        const date = new Date(to)
+        const year = date.getFullYear()
+        to = new Date(`${year}-01-01`).getTime()
+        from = count * period.multiplier * 365 * 24 * 60 * 60 * 1000
+        const fromDate = new Date(from)
+        from = new Date(`${fromDate.getFullYear()}-01-01`).getTime()
+        break
+      }
+    }
+
+    let url
+    let options
+    if (useDefault) {
+      url = DEFAULT_REQUREST_KLINE_URL
+      options = { ...params.options }
+    } else {
+      url = params.url
+      options = params.options ?? {}
+    }
+    url = url?.replace('{{ticker}}', symbol.ticker)
+    .replace('{{multiplier}}', `${period.multiplier}`)
+    .replace('{{timespan}}', `${period.timespan}`)
+    .replace('{{from}}', `${from}`)
+    .replace('{{to}}', `${to}`)
+    const keyValues: string[] = []
+    for (const key in options) {
+      let str = ''
+      const value = options[key]
+      switch (value) {
+        case '{{ticker}}': {
+          str = `${key}=${symbol.ticker}`
+          break
+        }
+        case '{{multiplier}}': {
+          str = `${key}=${period.multiplier}`
+          break
+        }
+        case '{{timespan}}': {
+          str = `${key}=${period.timespan}`
+          break
+        }
+        case '{{from}}': {
+          str = `${key}=${from}`
+          break
+        }
+        case '{{to}}': {
+          str = `${key}=${to}`
+          break
+        }
+        default: {
+          str = `${key}=${value}`
+        }
+      }
+      keyValues.push(str)
+    }
+    const response = await fetch(`${url}?${keyValues.join('&')}`)
+    const result = await response.json()
+    return await (result.result || result.results || [])
   }
 
   onMount(() => {
@@ -219,46 +328,86 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
   })
 
   createEffect(() => {
+    const symbol = currentSymbol()
+    widget?.setPriceVolumePrecision(symbol?.pricePrecision ?? 2, symbol?.volumePrecision ?? 0)
+  })
+
+  createEffect(() => {
     const period = currentPeriod()
     const symbol = currentSymbol()
     if (props.networkState === 'ok' && !loading && symbol) {
       loading = true
       setLoadingVisible(true)
-      componentOptions.element.dispatchEvent(
-        new CustomEvent<LoadDataEventDetail>(
-          'loadData',
-          {
-            detail: {
-              symbol,
-              period,
-              timestamp: null,
-              successCallback: (dataList: KLineData[], more: boolean) => {
-                widget?.applyNewData(dataList, more)
-                componentOptions.element.dispatchEvent(
-                  new CustomEvent<UpdateDataEventDetail>(
-                    'updateData',
-                    {
-                      detail: {
-                        symbol,
-                        period,
-                        callback: (data: KLineData) => {
-                          widget?.updateData(data)
-                        }
-                      }
-                    }
-                  )
-                )
-                loading = false
-                setLoadingVisible(false)
-              },
-              errorCallback: () => {
-                loading = false
-                setLoadingVisible(false)
-              }
-            }
-          }
-        )
-      )
+      const r = async () => {
+        const params = props.requestKLineDataParams ?? {}
+        const useDefault = !params.url || !params.url.startsWith('http')
+        const transferformKLineData = useDefault ? {
+          timestamp: 't',
+          open: 'o',
+          high: 'h',
+          low: 'l',
+          close: 'c',
+          volume: 'v',
+          turnover: 'vw'
+        } : (props.transformKLineData ?? {
+          timestamp: 'timestamp',
+          open: 'open',
+          high: 'high',
+          low: 'low',
+          close: 'close',
+          volume: 'volume',
+          turnover: 'turnover'
+        })
+        const result = await queryKLine(props.requestKLineDataParams, symbol, period)
+        widget?.applyNewData(result.map((data: any) => ({
+          timestamp: data[transferformKLineData.timestamp],
+          open: data[transferformKLineData.open],
+          high: data[transferformKLineData.high],
+          low: data[transferformKLineData.low],
+          close: data[transferformKLineData.close],
+          volume: data[transferformKLineData.volume],
+          turnover: data[transferformKLineData.turnover]
+        })))
+        loading = false
+        setLoadingVisible(false)
+      }
+      r()
+      
+      // componentOptions.element.dispatchEvent(
+      //   new CustomEvent<LoadDataEventDetail>(
+      //     'loadData',
+      //     {
+      //       detail: {
+      //         symbol,
+      //         period,
+      //         timestamp: null,
+      //         successCallback: (dataList: KLineData[], more: boolean) => {
+      //           widget?.applyNewData(dataList, more)
+      //           componentOptions.element.dispatchEvent(
+      //             new CustomEvent<UpdateDataEventDetail>(
+      //               'updateData',
+      //               {
+      //                 detail: {
+      //                   symbol,
+      //                   period,
+      //                   callback: (data: KLineData) => {
+      //                     widget?.updateData(data)
+      //                   }
+      //                 }
+      //               }
+      //             )
+      //           )
+      //           loading = false
+      //           setLoadingVisible(false)
+      //         },
+      //         errorCallback: () => {
+      //           loading = false
+      //           setLoadingVisible(false)
+      //         }
+      //       }
+      //     }
+      //   )
+      // )
     }
   })
 
@@ -384,6 +533,9 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
       <Show when={symbolSearchModalVisible()}>
         <SymbolSearchModal
           locale={props.locale}
+          transformSymbol={props.transformSymbol}
+          defaultSymbolLogo={props.defaultSymbolLogo}
+          requestParams={props.requestSymbolParams}
           onSymbolSelected={symbol => { setCurrentSymbol(symbol) }}
           onClose={() => { setSymbolSearchModalVisible(false) }}/>
       </Show>
@@ -450,6 +602,7 @@ const KLineChartPro: ComponentType<KLineChartProProps> = (props, componentOption
       </Show>
       <PeriodBar
         locale={props.locale}
+        defaultSymbolLogo={props.defaultSymbolLogo}
         symbol={currentSymbol()}
         spread={drawingBarVisible()}
         period={currentPeriod()}
