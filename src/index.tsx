@@ -12,44 +12,150 @@
  * limitations under the License.
  */
 
-import { customElement } from 'solid-element'
-import KLineChartPro from './KLineChartPro'
+import { Ref } from 'solid-js'
+import { render } from 'solid-js/web'
+import ChartComponent, { ChartComponentProps } from './ChartComponent'
 
-import { NetworkState } from './types'
+import { utils, ExcludePickPartial } from 'klinecharts'
 
-customElement(
-  'klinecharts-pro',
-  {
-    class: '',
-    style: {},
-    theme: 'light',
-    networkState: 'ok' as NetworkState,
-    watermark: undefined,
-    locale: 'zh-CN',
-    defaultDrawingBarVisible: true,
-    defaultTimezone: 'Asia/Shanghai',
-    timezone: undefined,
-    defaultSymbol: undefined,
-    symbol: undefined,
-    defaultPeriod: { multiplier: 1, timespan: 'minute', text: '1m' },
-    period: undefined,
-    periods: [
-      { multiplier: 1, timespan: 'minute', text: '1m' },
-      { multiplier: 5, timespan: 'minute', text: '5m' },
-      { multiplier: 15, timespan: 'minute', text: '15m' },
-      { multiplier: 1, timespan: 'hour', text: '1H' },
-      { multiplier: 2, timespan: 'hour', text: '2H' },
-      { multiplier: 4, timespan: 'hour', text: '4H' },
-      { multiplier: 1, timespan: 'day', text: 'D' },
-      { multiplier: 1, timespan: 'week', text: 'W' },
-      { multiplier: 1, timespan: 'month', text: 'M' },
-      { multiplier: 1, timespan: 'year', text: 'Y' }
-    ],
-    defaultMainIndicators: [] as string[],
-    defaultSubIndicators: [] as string[],
-    defaultSymbolLogo: 'data:image/png;base64,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',
-    requestSymbolParams: undefined,
-    requestKLineDataParams: undefined
-  },
-  KLineChartPro
+import './index.less'
+import { SymbolInfo, Period } from './types'
+
+export interface KLineChartPro {
+  setTheme(theme: string): void
+  getTheme(): string
+  setLocale(locale: string): void
+  getLocale(): string
+  setTimezone(timezone: string): void
+  getTimezone(): string
+  setSymbol(symbol: SymbolInfo): void
+  getSymbol(): SymbolInfo
+  setPeriod(period: Period): void
+  getPeriod(): Period
+}
+
+export interface KLineChartProOptions extends ExcludePickPartial<Exclude<ChartComponentProps, 'ref'>, 'symbol' | 'period' | 'datafeed'> {
+  container: string | HTMLElement
+}
+
+const Logo = (
+  <svg class="logo" viewBox="0 0 80 92">
+    <path d="M17.3121,90.6225C17.4517,90.6436,17.5901,90.6541,17.7274,90.6541C19.0559,90.6541,20.2213,89.6944,20.4295,88.3532C20.6566,86.8762,19.6297,85.4953,18.1367,85.2705C12.4557,84.4139,8.6332,82.4828,6.77344,79.5289C4.57886,76.0413,5.81634,72.041,5.82344,72.0188C5.85893,71.9123,5.88732,71.8035,5.9098,71.6934C8.12389,60.6361,11.356,53.3215,14.8104,48.1192C18.2648,42.9169,21.9414,39.8269,25.0446,37.2188C26.5968,35.915,28.0614,34.6827,29.2456,33.3731C30.9225,31.5172,31.6197,29.527,31.6725,27.5336C35.6187,26.8278,40.9421,26.2679,47.2065,26.583C48.0984,31.9917,53.6073,36.1009,54.9203,37.0116C62.331,44.1074,67.7577,51.6455,71.0525,59.4213C71.4914,60.4582,72.5065,61.082,73.576,61.082C73.9388,61.082,74.2976,61.01,74.6313,60.8702C76.0249,60.2932,76.6815,58.7074,76.0971,57.3287C72.4887,48.8133,66.5865,40.6151,58.5547,32.9599C58.4423,32.8523,58.3157,32.7516,58.1868,32.665C57.0851,31.9259,54.232,29.5936,53.0642,27.1195C53.1331,27.1287,53.2022,27.138,53.2713,27.1474C54.0162,29.0245,55.8642,30.3535,58.026,30.3535C59.5009,30.3535,60.8298,29.7349,61.7619,28.7456C64.8144,29.7431,68.4378,31.7217,69.4046,35.5848C69.6826,36.6932,70.687,37.4351,71.792,37.4351C71.9884,37.4351,72.1871,37.4117,72.3859,37.3638C73.7062,37.0407,74.5106,35.7206,74.1841,34.4145C72.9993,29.682,69.5399,26.8822,66.0787,25.233C69.5063,23.5492,71.5221,21.2286,71.6702,21.054C72.5457,20.0253,72.412,18.4886,71.3721,17.6226C70.3322,16.7577,68.78,16.8888,67.9033,17.9175C67.87,17.9563,65.4948,20.6901,61.621,21.7153C60.6982,20.8102,59.4281,20.2511,58.026,20.2511C57.4767,20.2511,56.9477,20.3369,56.4519,20.4957C60.0845,17.7606,64.6729,14.2394,65.5797,13.2374C67.1035,11.5533,68.7444,9.07333,67.9103,6.83096C67.4406,5.56933,66.3321,4.73254,64.8675,4.53476C63.5567,4.35687,62.3511,4.77234,61.2899,5.13865C59.4858,5.76127,58.3843,6.06556,56.7564,5.08482C56.1318,4.70797,55.5284,4.32176,54.9369,3.94374L54.9364,3.9434C51.4796,1.73271,47.5602,-0.773825,41.9871,0.726471C40.5296,1.11853,39.6695,2.60604,40.0659,4.04789C40.4622,5.48975,41.9647,6.34058,43.4234,5.94853C46.497,5.12109,48.4668,6.25164,51.9662,8.48933C52.5992,8.89427,53.2439,9.30622,53.9124,9.70882C56.1034,11.0278,58.1028,11.2502,59.7803,11.0758C57.5491,12.857,53.6142,15.8508,49.9988,18.539C49.8498,18.6502,49.7137,18.7754,49.5907,18.9135C48.8054,19.7953,48.2004,20.7386,47.7817,21.7249C40.8791,21.3359,35.0392,21.9433,30.7016,22.7299C28.9691,18.45,25.3757,14.69,23.6876,12.9237L23.2771,12.4919C22.3803,11.5427,21.4493,9.09088,20.724,6.56646C22.9517,7.09896,24.4992,7.27569,26.6784,7.49454C28.182,7.64786,29.5236,6.56295,29.6762,5.07662C29.83,3.59029,28.7357,2.26195,27.2321,2.11098C24.2638,1.81255,22.7731,1.66274,17.8125,0.123747C16.8976,-0.159672,15.8995,0.0512175,15.1814,0.679657C14.4636,1.30796,14.1306,2.26212,14.3036,3.19471C14.6017,4.80159,16.2438,12.9776,19.2819,16.1902L19.7125,16.6431C21.7693,18.7949,24.087,21.4425,25.3073,23.9616C23.5312,24.4607,22.5042,24.8571,22.352,24.9172C21.0897,25.4146,20.4756,26.8272,20.9761,28.076C21.4777,29.3247,22.908,29.9368,24.1703,29.4429C24.1971,29.4326,24.7465,29.2231,25.7556,28.9202C25.6051,29.2154,25.4105,29.4984,25.1676,29.7672C24.2342,30.7995,22.9683,31.8633,21.5025,33.0957C15.0785,38.4945,5.37624,46.647,0.56829,70.5137C0.241766,71.6314,-1.1223,77.1437,2.07787,82.3084C4.80718,86.7136,9.93219,89.5095,17.3121,90.6225ZM31.9158,3.86173C31.9158,5.61208,33.3502,7.03101,35.1195,7.03101C36.8889,7.03101,38.3233,5.61208,38.3233,3.86173C38.3233,2.11139,36.8889,0.69245,35.1195,0.69245C33.3502,0.69245,31.9158,2.11139,31.9158,3.86173ZM76.4249,69.6758C74.6555,69.6758,73.2212,68.2569,73.2212,66.5065C73.2212,64.7562,74.6555,63.3372,76.4249,63.3372C78.1943,63.3372,79.6286,64.7562,79.6286,66.5065C79.6286,68.2569,78.1943,69.6758,76.4249,69.6758ZM33.3378,91.7858C34.2038,91.7987,35.0734,91.8045,35.9465,91.8045C51.0955,91.8046,67.0041,89.9999,69.4317,89.142C76.148,86.7686,80,81.5992,80,74.9575C80,73.463,78.7755,72.2517,77.2648,72.2517C75.754,72.2517,74.5295,73.463,74.5295,74.9575C74.5295,79.3603,72.1953,82.4184,67.6134,84.037C65.7512,84.6175,49.6344,86.6059,33.4183,86.3742C31.9158,86.3297,30.6653,87.5457,30.6428,89.0402C30.6203,90.5359,31.827,91.7636,33.3378,91.7858ZM22.0693,88.8307C22.0693,90.5811,23.5037,92,25.2731,92C27.0424,92,28.4768,90.5811,28.4768,88.8307C28.4768,87.0804,27.0424,85.6615,25.2731,85.6615C23.5037,85.6615,22.0693,87.0804,22.0693,88.8307Z" fill-rule="evenodd" fill-opacity="1"/>
+    <rect x="23.445068359375" y="52.683013916015625" width="12.70588207244873" height="22.702716827392578" rx="2" fill-opacity="1"/>
+    <path d="M29.562697410583496 47.24264647066593C29.562697410583496 47.11269711728047 29.66804217572163 47.007352352142334 29.797991529107094 47.007352352142334L29.797991529107094 47.007352352142334C29.927940882492557 47.007352352142334 30.03328564763069 47.11269711728047 30.03328564763069 47.24264647066593L30.03328564763069 52.68303155899048C30.03328564763069 52.68303155899048 30.03328564763069 52.68303155899048 30.03328564763069 52.68303155899048L29.562697410583496 52.68303155899048C29.562697410583496 52.68303155899048 29.562697410583496 52.68303155899048 29.562697410583496 52.68303155899048Z" fill-opacity="1"/>
+    <path d="M29.562697410583496 75.38572645187378C29.562697410583496 75.38572645187378 29.562697410583496 75.38572645187378 29.562697410583496 75.38572645187378L30.03328564763069 75.38572645187378C30.03328564763069 75.38572645187378 30.03328564763069 75.38572645187378 30.03328564763069 75.38572645187378L30.03328564763069 80.82611154019833C30.03328564763069 80.95606089358378 29.927940882492557 81.06140565872192 29.797991529107094 81.06140565872192L29.797991529107094 81.06140565872192C29.66804217572163 81.06140565872192 29.562697410583496 80.95606089358378 29.562697410583496 80.82611154019833Z" fill-opacity="1"/>
+    <rect x="42.73918533325195" y="44.73706293106079" width="12.70588207244873" height="22.702716827392578" rx="2" fill-opacity="1"/>
+    <path d="M48.85681438446045 39.2966954857111C48.85681438446045 39.166746132325635 48.962159149598584 39.0614013671875 49.09210850298405 39.0614013671875L49.09210850298405 39.0614013671875C49.22205785636951 39.0614013671875 49.327402621507645 39.166746132325635 49.327402621507645 39.2966954857111L49.327402621507645 44.737080574035645C49.327402621507645 44.737080574035645 49.327402621507645 44.737080574035645 49.327402621507645 44.737080574035645L48.85681438446045 44.737080574035645C48.85681438446045 44.737080574035645 48.85681438446045 44.737080574035645 48.85681438446045 44.737080574035645Z" fill-opacity="1"/>
+    <path d="M48.85681438446045 67.43977546691895C48.85681438446045 67.43977546691895 48.85681438446045 67.43977546691895 48.85681438446045 67.43977546691895L49.327402621507645 67.43977546691895C49.327402621507645 67.43977546691895 49.327402621507645 67.43977546691895 49.327402621507645 67.43977546691895L49.327402621507645 72.88016055524349C49.327402621507645 73.01010990862895 49.22205785636951 73.11545467376709 49.09210850298405 73.11545467376709L49.09210850298405 73.11545467376709C48.962159149598584 73.11545467376709 48.85681438446045 73.01010990862895 48.85681438446045 72.88016055524349Z" fill-opacity="1"/>
+  </svg>
 )
+
+export default class KLineChartProImp implements KLineChartPro {
+  private _chart: Ref<KLineChartPro> | undefined
+
+  constructor (options: KLineChartProOptions) {
+    const container = utils.isString(options.container) ? document.getElementById(options.container as string) : options.container
+    render(
+      () => (
+        <ChartComponent
+          ref={this._chart}
+          class={options.class ?? ''}
+          style={options.style ?? ''}
+          watermark={options.watermark ?? (Logo as Node)}
+          theme={options.theme ?? 'light'}
+          locale={options.locale ?? 'zh-CN'}
+          drawingBarVisible={options.drawingBarVisible ?? true}
+          symbol={options.symbol}
+          period={options.period}
+          periods={
+            options.periods ?? [
+              { multiplier: 1, timespan: 'minute', text: '1m' },
+              { multiplier: 5, timespan: 'minute', text: '5m' },
+              { multiplier: 15, timespan: 'minute', text: '15m' },
+              { multiplier: 1, timespan: 'hour', text: '1H' },
+              { multiplier: 2, timespan: 'hour', text: '2H' },
+              { multiplier: 4, timespan: 'hour', text: '4H' },
+              { multiplier: 1, timespan: 'day', text: 'D' },
+              { multiplier: 1, timespan: 'week', text: 'W' },
+              { multiplier: 1, timespan: 'month', text: 'M' },
+              { multiplier: 1, timespan: 'year', text: 'Y' }
+            ]
+          }
+          timezone={options.timezone ?? 'Asia/Shanghai'}
+          mainIndicators={options.mainIndicators ?? ['EMA']}
+          subIndicators={options.subIndicators ?? ['VOL']}
+          datafeed={options.datafeed}/>
+      ),
+      container as HTMLElement
+    )
+    console.log(this._chart)
+  }
+  setTheme (theme: string): void {
+    throw new Error('Method not implemented.')
+  }
+  getTheme (): string {
+    throw new Error('Method not implemented.')
+  }
+  setLocale (locale: string): void {
+    throw new Error('Method not implemented.')
+  }
+  getLocale (): string {
+    throw new Error('Method not implemented.')
+  }
+  setTimezone (timezone: string): void {
+    throw new Error('Method not implemented.')
+  }
+  getTimezone (): string {
+    throw new Error('Method not implemented.')
+  }
+  setSymbol (symbol: SymbolInfo): void {
+    throw new Error('Method not implemented.')
+  }
+  getSymbol (): SymbolInfo {
+    throw new Error('Method not implemented.')
+  }
+  setPeriod (period: Period): void {
+    throw new Error('Method not implemented.')
+  }
+  getPeriod (): Period {
+    throw new Error('Method not implemented.')
+  }
+}
+
+// customElement(
+//   'klinecharts-pro',
+//   {
+//     class: '',
+//     style: {},
+//     theme: 'light',
+//     websocketState: undefined,
+//     watermark: undefined,
+//     locale: 'zh-CN',
+//     defaultDrawingBarVisible: true,
+//     defaultTimezone: 'Asia/Shanghai',
+//     timezone: undefined,
+//     defaultSymbol: undefined,
+//     symbol: undefined,
+//     defaultPeriod: { multiplier: 15, timespan: 'minute', text: '15m' },
+//     period: undefined,
+//     periods: [
+//       { multiplier: 1, timespan: 'minute', text: '1m' },
+//       { multiplier: 5, timespan: 'minute', text: '5m' },
+//       { multiplier: 15, timespan: 'minute', text: '15m' },
+//       { multiplier: 1, timespan: 'hour', text: '1H' },
+//       { multiplier: 2, timespan: 'hour', text: '2H' },
+//       { multiplier: 4, timespan: 'hour', text: '4H' },
+//       { multiplier: 1, timespan: 'day', text: 'D' },
+//       { multiplier: 1, timespan: 'week', text: 'W' },
+//       { multiplier: 1, timespan: 'month', text: 'M' },
+//       { multiplier: 1, timespan: 'year', text: 'Y' }
+//     ],
+//     defaultMainIndicators: [] as string[],
+//     defaultSubIndicators: [] as string[],
+//     defaultSymbolLogo: 'data:image/png;base64,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',
+//     symbolRequestParams: undefined,
+//     kLineDataRequestParams: undefined,
+//     websocketRequestParams: undefined
+//   },
+//   KLineChartPro
+// )

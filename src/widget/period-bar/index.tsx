@@ -21,8 +21,7 @@ import i18n from '../../i18n'
 export interface PeriodBarProps {
   locale: string
   spread: boolean
-  defaultSymbolLogo: string
-  symbol?: SymbolInfo
+  symbol: SymbolInfo
   period: Period
   periods: Period[]
   onMenuClick: () => void
@@ -50,8 +49,11 @@ const PeriodBar: Component<PeriodBarProps> = props => {
         <div
           class="symbol"
           onClick={props.onSymbolClick}>
-          <img alt="symbol" src={props.symbol?.logo ?? props.defaultSymbolLogo}/>
-          <span>{props.symbol?.shortName ?? props.symbol?.name ?? props.symbol?.ticker}</span>
+          <Show when={props.symbol.name}>
+            <img alt="symbol" src={props.symbol.logo}/>
+          </Show>
+         
+          <span>{props.symbol.shortName ?? props.symbol.name ?? props.symbol.ticker}</span>
         </div>
       </Show>
       {

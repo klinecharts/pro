@@ -54,6 +54,7 @@
     "vitest": "^0.28.4"
   },
   "dependencies": {
+    "@polygon.io/client-js": "^7.0.3",
     "klinecharts": "^9.1.0",
     "solid-color": "^0.0.4",
     "solid-element": "^1.6.3",

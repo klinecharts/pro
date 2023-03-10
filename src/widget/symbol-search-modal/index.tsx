@@ -12,87 +12,31 @@
  * limitations under the License.
  */
 
-import { Component, createSignal, createResource, createEffect } from 'solid-js'
+import { Component, createSignal, createResource, Show } from 'solid-js'
 
 import { Modal, List, Input } from '../../component'
 
 import i18n from '../../i18n'
 
-import { DEFAULT_REQUREST_SYMBOL_URL } from '../../contants'
-
-import { RequestParams, SymbolInfo, TransformSymbol } from '../../types'
+import { SymbolInfo } from '../../types'
+import { Datafeed } from '../Datafeed'
 
 export interface SymbolSearchModalProps {
   locale: string
-  requestParams?: RequestParams
-  defaultSymbolLogo: string
+  datafeed: Datafeed
   onSymbolSelected: (symbol: SymbolInfo) => void
-  transformSymbol?: TransformSymbol
   onClose: () => void
 }
 
 const SymbolSearchModal: Component<SymbolSearchModalProps> = props => {
   const [value, setValue] = createSignal('')
-  const [symbolList, setSymbolList] = createSignal([])
 
-  const searchSymbols = async (search: string) => {
-    const params = props.requestParams ?? {}
-    const useDefault = !params.url || !params.url.startsWith('http')
-    let url
-    let options
-    if (useDefault) {
-      url = DEFAULT_REQUREST_SYMBOL_URL
-      options = { search: '{{search}}', active: true, ...params.options }
-    } else {
-      url = params.url
-      options = params.options ?? {}
-    }
-    const keyValues: string[] = []
-    for (const key in options) {
-      const value = options[key]
-      keyValues.push(`${key}=${value === '{{search}}' ? search : value}`)
-    }
-    const response = await fetch(`${url}?${keyValues.join('&')}`)
-    return await response.json()
-  }
-
-  const [result] = createResource(value, searchSymbols)
-
-  createEffect(() => {
-    if (!result.loading) {
-      const r = result()
-      const symbols = r.result || r.results || []
-      const params = props.requestParams ?? {}
-      const useDefault = !params.url || !params.url.startsWith('http')
-      const transformSymbol = useDefault
-        ? {
-          ticker: 'ticker',
-          name: 'name',
-          shortName: 'ticker',
-          market: 'market',
-          exchange: 'primary_exchange'
-        } : (props.transformSymbol ?? {
-          ticker: 'ticker',
-          name: 'name',
-          shortName: 'shortName',
-          market: 'market',
-          exchange: 'exchange'
-        })
-      const list = symbols.map((data: any) => ({
-        ticker: data[transformSymbol.ticker],
-        name: data[transformSymbol.name],
-        shortName: data[transformSymbol.shortName],
-        market: data[transformSymbol.market],
-        exchange: data[transformSymbol.exchange]
-      }))
-      setSymbolList(list)
-    }
-  })
+  const [symbolList] = createResource(value, props.datafeed.searchSymbols)
 
   return (
     <Modal
       title={i18n('symbol_search', props.locale)}
-      width={400}
+      width={460}
       onClose={props.onClose}>
       <Input
         class="klinecharts-pro-symbol-search-modal-input"
@@ -109,8 +53,8 @@ const SymbolSearchModal: Component<SymbolSearchModalProps> = props => {
         }}/>
       <List
         class="klinecharts-pro-symbol-search-modal-list"
-        loading={result.loading}
-        dataSource={symbolList()}
+        loading={symbolList.loading}
+        dataSource={symbolList() ?? []}
         renderItem={(symbol: SymbolInfo) => (
           <li
             onClick={() => {
@@ -118,8 +62,10 @@ const SymbolSearchModal: Component<SymbolSearchModalProps> = props => {
               props.onClose()
             }}>
             <div>
-              <img alt="symbol" src={symbol.logo ?? props.defaultSymbolLogo}/>
-              {symbol.shortName ?? symbol.name ?? symbol.ticker}
+              <Show when={symbol.logo}>
+                <img alt="symbol" src={symbol.logo}/>
+              </Show>
+              <span title={symbol.name ?? ''}>{symbol.shortName ?? symbol.ticker}{`${symbol.name ? `(${symbol.name})` : ''}`}</span>
             </div>
             {symbol.exchange ?? ''}
           </li>

@@ -12,9 +12,10 @@
  * limitations under the License.
  */
 
-import { KLineData, Nullable } from 'klinecharts'
-
-export type NetworkState = 'pending' | 'ok' | 'error'
+export enum WebsocketState {
+  CONNECTED = 'connected',
+  DISCONNECTED = 'disconnected'
+}
 
 export interface SymbolInfo {
   ticker: string
@@ -24,6 +25,7 @@ export interface SymbolInfo {
   market?: string
   pricePrecision?: number
   volumePrecision?: number,
+  priceCurrency?: string, 
   logo?: string
 }
 
@@ -32,26 +34,3 @@ export interface Period {
   timespan: string
   text: string
 }
-
-export interface LoadDataEventDetail {
-  symbol: SymbolInfo
-  period: Period
-  timestamp: Nullable<number>
-  successCallback: (dataList: KLineData[], more: boolean) => void
-  errorCallback: () => void
-}
-
-export interface UpdateDataEventDetail {
-  symbol: SymbolInfo
-  period: Period
-  callback: (data: KLineData) => void
-}
-
-export interface RequestParams {
-  url?: string
-  options?: {[key: string]: any}
-}
-
-export type TransformSymbol = Record<keyof SymbolInfo, string>
-
-export type TransformKLineData = Record<keyof KLineData, string>

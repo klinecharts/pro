@@ -9,6 +9,16 @@
   font-size: 14px;
   color: var(---klinecharts-pro-text-color);
   min-height: 200px;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: var(--klinecharts-pro-border-color);
+  }
   li {
     display: flex;
     flex-direction: row;
