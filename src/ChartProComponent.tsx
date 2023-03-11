@@ -12,46 +12,29 @@
  * limitations under the License.
  */
 
-import { createSignal, createEffect, onMount, JSX, Show, onCleanup, startTransition, Component, Ref } from 'solid-js'
+import { createSignal, createEffect, onMount, Show, onCleanup, startTransition, Component, untrack } from 'solid-js'
 
 import {
-  init, dispose, utils, Nullable, Chart, registerOverlay, OverlayMode,
-  TooltipIconPosition, ActionType, PaneOptions, Indicator, DomPosition, FormatDateType
+  init, dispose, utils, Nullable, Chart, OverlayMode, Styles,
+  TooltipIconPosition, ActionType, PaneOptions, Indicator, DomPosition, FormatDateType, DeepPartial
 } from 'klinecharts'
 
-import overlays from './extension'
+import set from 'lodash/set'
+
 import { SelectDataSourceItem, Loading } from './component'
 
 import {
-  PeriodBar, DrawingBar, IndicatorModal, TimezoneModal,
+  PeriodBar, DrawingBar, IndicatorModal, TimezoneModal, SettingModal,
   ScreenshotModal, IndicatorSettingModal, SymbolSearchModal
 } from './widget'
 
 import { translateTimezone } from './widget/timezone-modal/data'
 
-import { SymbolInfo, Period } from './types'
+import { SymbolInfo, Period, ChartProOptions, ChartPro } from './types'
 
-import { KLineChartPro } from './index'
-import { Datafeed } from './widget/Datafeed'
-
-export interface ChartComponentProps {
-  ref?: Ref<KLineChartPro>
-  class: string
-  style: JSX.CSSProperties | string
-  watermark: string | Node
-  theme: string
-  locale: string
-  drawingBarVisible: boolean
-  symbol: SymbolInfo
-  period: Period
-  periods: Period[]
-  timezone: string
-  mainIndicators: string[]
-  subIndicators: string[]
-  datafeed: Datafeed
+export interface ChartProComponentProps extends Required<Omit<ChartProOptions, 'container'>> {
+  ref: (chart: ChartPro) => void
 }
-
-overlays.forEach(o => { registerOverlay(o) })
 
 interface PrevSymbolPeriod {
   symbol: SymbolInfo
@@ -81,7 +64,7 @@ function createIndicator (widget: Nullable<Chart>, indicatorName: string, isStac
   }, isStack, paneOptions) ?? null
 }
 
-const ChartComponent: Component<ChartComponentProps> = props => {
+const ChartProComponent: Component<ChartProComponentProps> = props => {
   let widgetRef: HTMLDivElement | undefined = undefined
   let widget: Nullable<Chart> = null
 
@@ -90,6 +73,7 @@ const ChartComponent: Component<ChartComponentProps> = props => {
   let loading = false
 
   const [theme, setTheme] = createSignal(props.theme)
+  const [styles, setStyles] = createSignal(props.styles)
   const [locale, setLocale] = createSignal(props.locale)
 
   const [symbol, setSymbol] = createSignal(props.symbol)
@@ -102,6 +86,7 @@ const ChartComponent: Component<ChartComponentProps> = props => {
   const [timezone, setTimezone] = createSignal<SelectDataSourceItem>({ key: props.timezone, text: translateTimezone(props.timezone, props.locale) })
 
   const [settingModalVisible, setSettingModalVisible] = createSignal(false)
+  const [widgetStyles, setWidgetStyles] = createSignal<Styles>()
 
   const [screenshotUrl, setScreenshotUrl] = createSignal('')
 
@@ -115,13 +100,19 @@ const ChartComponent: Component<ChartComponentProps> = props => {
     visible: false, indicatorName: '', paneId: '', calcParams: [] as Array<any>
   })
 
-  // @ts-expect-error
-  props.ref?.({
+  props.ref({
     setTheme,
+    getTheme: () => theme(),
+    setStyles,
+    getStyles: () => widget?.getStyles()!,
     setLocale,
+    getLocale: () => locale(),
     setTimezone: (timezone: string) => { setTimezone({ key: timezone, text: translateTimezone(props.timezone, locale()) }) },
+    getTimezone: () => timezone().key,
     setSymbol,
-    setPeriod
+    getSymbol: () => symbol(),
+    setPeriod,
+    getPeriod: () => period()
   })
 
   const documentResize = () => {
@@ -439,11 +430,15 @@ const ChartComponent: Component<ChartComponentProps> = props => {
     widget?.setTimezone(timezone().key)
   })
 
+  createEffect(() => {
+    if (styles()) {
+      widget?.setStyles(styles())
+      setWidgetStyles(utils.clone(widget!.getStyles()))
+    }
+  })
+
   return (
-    <div
-      style={props.style}
-      class={`klinecharts-pro ${props.class}`}
-      data-theme={theme()}>
+    <>
       <i class="icon-close klinecharts-pro-load-icon"/>
       <Show when={symbolSearchModalVisible()}>
         <SymbolSearchModal
@@ -493,6 +488,20 @@ const ChartComponent: Component<ChartComponentProps> = props => {
           timezone={timezone()}
           onClose={() => { setTimezoneModalVisible(false) }}
           onConfirm={setTimezone}
+        />
+      </Show>
+      <Show when={settingModalVisible()}>
+        <SettingModal
+          locale={props.locale}
+          currentStyles={utils.clone(widget!.getStyles())}
+          onClose={() => { setSettingModalVisible(false) }}
+          onChange={style => {
+            widget?.setStyles(style)
+          }}
+          onRestoreDefault={(key: string) => {
+            // @ts-expect-error
+            widget?.setStyles({ key: widgetStyles()[key] })
+          }}
         />
       </Show>
       <Show when={screenshotUrl().length > 0}>
@@ -556,8 +565,8 @@ const ChartComponent: Component<ChartComponentProps> = props => {
           class='klinecharts-pro-widget'
           data-drawing-bar-visible={drawingBarVisible()}/>
       </div>
-    </div>
+    </>
   )
 }
 
-export default ChartComponent
+export default ChartProComponent

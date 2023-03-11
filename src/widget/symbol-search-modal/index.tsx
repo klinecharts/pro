@@ -18,8 +18,7 @@ import { Modal, List, Input } from '../../component'
 
 import i18n from '../../i18n'
 
-import { SymbolInfo } from '../../types'
-import { Datafeed } from '../Datafeed'
+import { SymbolInfo, Datafeed } from '../../types'
 
 export interface SymbolSearchModalProps {
   locale: string
@@ -31,7 +30,7 @@ export interface SymbolSearchModalProps {
 const SymbolSearchModal: Component<SymbolSearchModalProps> = props => {
   const [value, setValue] = createSignal('')
 
-  const [symbolList] = createResource(value, props.datafeed.searchSymbols)
+  const [symbolList] = createResource(value, props.datafeed.searchSymbols.bind(props.datafeed))
 
   return (
     <Modal

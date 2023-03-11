@@ -12,17 +12,27 @@
  * limitations under the License.
  */
 
-import Button from './button'
-import Checkbox from './checkbox'
-import List from './list'
-import Modal from './modal'
-import Select, { SelectDataSourceItem } from './select'
-import Input from './input'
-import Loading from './loading'
-import Switch from './switch'
+import { Component, JSX } from 'solid-js'
 
-export {
-  Button, Checkbox, List, Modal, Select, Input, Loading, Switch
+export interface SwitchProps {
+  class?: string
+  style?: JSX.CSSProperties | string
+  open: boolean
+  onChange: () => void
 }
 
-export type { SelectDataSourceItem }
+const Switch: Component<SwitchProps> = props => {
+  return (
+    <div
+      style={props.style}
+      class={`klinecharts-pro-switch ${props.open ? 'turn-on' : 'turn-off'} ${props.class ?? ''}`}
+      onClick={_ => {
+        props.onChange && props.onChange()
+      }}>
+      <i
+        class="thumb"/>
+    </div>
+  )
+}
+
+export default Switch
