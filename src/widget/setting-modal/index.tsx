@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { Component, createMemo, createSignal } from 'solid-js'
+import { Component, createEffect, For, createSignal } from 'solid-js'
 import { Styles, utils, DeepPartial } from 'klinecharts'
 
 import lodashSet from 'lodash/set'
@@ -28,15 +28,26 @@ export interface SettingModalProps {
   currentStyles: Styles
   onClose: () => void
   onChange: (style: DeepPartial<Styles>) => void
-  onRestoreDefault: (key: string) => void
+  onRestoreDefault: (options: SelectDataSourceItem[]) => void
 }
 
 const SettingModal: Component<SettingModalProps> = props => {
   const [styles, setStyles] = createSignal(props.currentStyles)
+  const [options, setOptions] = createSignal(getOptions(props.locale))
 
-  const options = createMemo(() => {
-    return getOptions(props.locale)    
+  createEffect(() => {
+    setOptions(getOptions(props.locale))
   })
+
+  const update = (option: SelectDataSourceItem, newValue: any) => {
+    const style = {}
+    lodashSet(style, option.key, newValue)
+    const ss = utils.clone(styles())
+    lodashSet(ss, option.key, newValue)
+    setStyles(ss)
+    setOptions(options().map(op => ({ ...op })))
+    props.onChange(style)
+  }
 
   return (
     <Modal
@@ -46,7 +57,7 @@ const SettingModal: Component<SettingModalProps> = props => {
         {
           children: i18n('restore_default', props.locale),
           onClick: () => {
-            props.onRestoreDefault('')
+            props.onRestoreDefault(options())
             props.onClose()
           }
         }
@@ -54,58 +65,47 @@ const SettingModal: Component<SettingModalProps> = props => {
       onClose={props.onClose}>
       <div
         class="klinecharts-pro-setting-modal-content">
-        {
-          options().map(option => {
-            let component
-            const value = utils.formatValue(styles(), option.key)
-            switch (option.component) {
-              case 'select': {
-                component = (
-                  <Select
-                    style={{ width: '120px' }}
-                    value={i18n(value as string, props.locale)}
-                    dataSource={option.dataSource}
-                    onSelected={(data) => {
-                      const newValue = (data as SelectDataSourceItem).key
-                      const style = {}
-                      lodashSet(style, option.key, newValue)
-                      const ss = utils.clone(styles())
-                      lodashSet(ss, option.key, newValue)
-                      setStyles(ss)
-                      props.onChange(style)
-                    }}/>
-                )
-                break
+        <For each={options()}>
+          {
+            option => {
+              let component
+              const value = utils.formatValue(styles(), option.key)
+              switch (option.component) {
+                case 'select': {
+                  component = (
+                    <Select
+                      style={{ width: '120px' }}
+                      value={i18n(value as string, props.locale)}
+                      dataSource={option.dataSource}
+                      onSelected={(data) => {
+                        const newValue = (data as SelectDataSourceItem).key
+                        update(option, newValue)
+                      }}/>
+                  )
+                  break
+                }
+                case 'switch': {
+                  const open = !!value
+                  component = (
+                    <Switch
+                      open={open}
+                      onChange={() => {
+                        const newValue = !open
+                        update(option, newValue)
+                      }}/>
+                  )
+                  break
+                }
               }
-              case 'switch': {
-                const open = !!value
-                console.log(1111111)
-                component = (
-                  <Switch
-                    open={open}
-                    onChange={() => {
-                      const newValue = !open
-                      const style = {}
-                      lodashSet(style, option.key, newValue)
-                      const ss = utils.clone(styles())
-                      lodashSet(ss, option.key, newValue)
-                      setStyles(ss)
-                      console.log(ss)
-                      console.log(style)
-                      props.onChange(style)
-                    }}/>
-                )
-                break
-              }
+              return (
+                <>
+                  <span>{option.text}</span>
+                  {component}
+                </>
+              )
             }
-            return (
-              <>
-                <span>{option.text}</span>
-                {component}
-              </>
-            )
-          })
-        }
+          }
+        </For>
       </div> 
     </Modal>
   )

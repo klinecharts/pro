@@ -19,7 +19,8 @@ import {
   TooltipIconPosition, ActionType, PaneOptions, Indicator, DomPosition, FormatDateType, DeepPartial
 } from 'klinecharts'
 
-import set from 'lodash/set'
+import lodashSet from 'lodash/set'
+import lodashClone from 'lodash/cloneDeep'
 
 import { SelectDataSourceItem, Loading } from './component'
 
@@ -86,7 +87,7 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   const [timezone, setTimezone] = createSignal<SelectDataSourceItem>({ key: props.timezone, text: translateTimezone(props.timezone, props.locale) })
 
   const [settingModalVisible, setSettingModalVisible] = createSignal(false)
-  const [widgetStyles, setWidgetStyles] = createSignal<Styles>()
+  const [widgetDefaultStyles, setWidgetDefaultStyles] = createSignal<Styles>()
 
   const [screenshotUrl, setScreenshotUrl] = createSignal('')
 
@@ -104,7 +105,7 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
     setTheme,
     getTheme: () => theme(),
     setStyles,
-    getStyles: () => widget?.getStyles()!,
+    getStyles: () => widget!.getStyles(),
     setLocale,
     getLocale: () => locale(),
     setTimezone: (timezone: string) => { setTimezone({ key: timezone, text: translateTimezone(props.timezone, locale()) }) },
@@ -433,7 +434,7 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   createEffect(() => {
     if (styles()) {
       widget?.setStyles(styles())
-      setWidgetStyles(utils.clone(widget!.getStyles()))
+      setWidgetDefaultStyles(lodashClone(widget!.getStyles()))
     }
   })
 
@@ -498,9 +499,13 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
           onChange={style => {
             widget?.setStyles(style)
           }}
-          onRestoreDefault={(key: string) => {
-            // @ts-expect-error
-            widget?.setStyles({ key: widgetStyles()[key] })
+          onRestoreDefault={(options: SelectDataSourceItem[]) => {
+            const style = {}
+            options.forEach(option => {
+              const key = option.key
+              lodashSet(style, key, utils.formatValue(widgetDefaultStyles(), key))
+            })
+            widget?.setStyles(style)
           }}
         />
       </Show>
