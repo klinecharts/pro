@@ -54,7 +54,7 @@
     "vitest": "^0.28.4"
   },
   "dependencies": {
-    "klinecharts": "^9.1.0",
+    "klinecharts": "^9.1.1",
     "lodash": "^4.17.21",
     "solid-js": "^1.6.11"
   }
