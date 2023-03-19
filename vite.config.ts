@@ -6,12 +6,17 @@ import solidPlugin from 'vite-plugin-solid'
 export default defineConfig({
   plugins: [solidPlugin()],
   build: {
+    cssTarget: 'chrome61',
     rollupOptions: {
+      external: ['klinecharts'],
       output: {
         assetFileNames: (chunkInfo) => {
           if (chunkInfo.name === 'style.css') {
             return 'klinecharts-pro.css'
           }
+        },
+        globals: {
+          klinecharts: 'klinecharts'
         },
       },
     },

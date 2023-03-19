@@ -31,7 +31,10 @@
   "scripts": {
     "build-core": "tsc && vite build",
     "build-dts": "dts-bundle-generator --no-banner true --umd-module-name klinechartspro -o dist/index.d.ts src/types.ts",
-    "build": "npm run build-core && npm run build-dts"
+    "build": "npm run build-core && npm run build-dts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.6.0",
@@ -51,11 +54,14 @@
     "typescript": "^4.9.5",
     "vite": "^4.1.1",
     "vite-plugin-solid": "^2.6.1",
+    "vitepress": "^1.0.0-alpha.60",
     "vitest": "^0.28.4"
   },
   "dependencies": {
-    "klinecharts": "^9.1.1",
     "lodash": "^4.17.21",
     "solid-js": "^1.6.11"
+  },
+  "peerDependencies": {
+    "klinecharts": ">=9.0.0"
   }
 }
