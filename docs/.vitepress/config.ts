@@ -23,6 +23,10 @@ export default defineConfig({
             text: '快速开始',
             link: '/getting-started'
           },
+          {
+            text: '数据接入',
+            link: '/access-data'
+          }
         ],
         docFooter: {
           prev: '上一篇',
