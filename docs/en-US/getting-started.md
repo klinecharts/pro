@@ -4,10 +4,10 @@
 Use npm or yarn
 ```bash
 # npm
-npm install klinecharts klinecharts-pro
+npm install klinecharts @klinecharts/pro
 
 # yarn
-yarn install klinecharts klinecharts-pro
+yarn install klinecharts @klinecharts/pro
 ```
 If it is imported directly through a script tag, you can use either of the following two CDNs
 ::: warning Note
@@ -16,10 +16,10 @@ For production environments, it is recommended to use a clear version number to 
 
 ```html
 <!-- unpkg -->
-<script src="https://unpkg.com/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://unpkg.com/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 
 <!-- jsdelivr -->
-<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 ```
 
 ## Usage
@@ -31,9 +31,9 @@ For production environments, it is recommended to use a clear version number to 
 In projects using package managers such as npm and yarn
 ```javascript
 // Import js
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 // Import css
-import 'klinecharts-pro/dist/klinecharts-pro.css'
+import '@klinecharts/pro/dist/klinecharts-pro.css'
 
 // Create Instance
 const chart = new KLineChartPro({

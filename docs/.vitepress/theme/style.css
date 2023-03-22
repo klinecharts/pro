@@ -8,13 +8,14 @@
  * -------------------------------------------------------------------------- */
 
  :root {
-  --vp-c-brand: #646cff;
-  --vp-c-brand-light: #747bff;
-  --vp-c-brand-lighter: #9499ff;
-  --vp-c-brand-lightest: #bcc0ff;
-  --vp-c-brand-dark: #535bf2;
-  --vp-c-brand-darker: #454ce1;
-  --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-c-brand: #1677FF;
+  --vp-c-brand-dark: #1677FF;
+  --vp-c-brand-light: #3086ff;
+  --vp-c-brand-lighter: #4995ff;
+  --vp-c-brand-lightest: #afd0ff;
+  /* --vp-c-brand-dark: #535bf2;
+  --vp-c-brand-darker: #454ce1; */
+  --vp-c-brand-dimm: rgba(22, 119, 255, 0.08);
 }
 
 /**
@@ -23,13 +24,13 @@
 
 :root {
   --vp-button-brand-border: var(--vp-c-brand-light);
-  --vp-button-brand-text: var(--vp-c-white);
+  /* --vp-button-brand-text: var(--vp-c-white); */
   --vp-button-brand-bg: var(--vp-c-brand);
   --vp-button-brand-hover-border: var(--vp-c-brand-light);
-  --vp-button-brand-hover-text: var(--vp-c-white);
+  /* --vp-button-brand-hover-text: var(--vp-c-white); */
   --vp-button-brand-hover-bg: var(--vp-c-brand-light);
   --vp-button-brand-active-border: var(--vp-c-brand-light);
-  --vp-button-brand-active-text: var(--vp-c-white);
+  /* --vp-button-brand-active-text: var(--vp-c-white); */
   --vp-button-brand-active-bg: var(--vp-button-brand-bg);
 }
 
@@ -39,30 +40,11 @@
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
+ --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #bd34fe 30%,
-    #41d1ff
+    #1677FF 30%,
+    #26A69A
   );
-
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #bd34fe 50%,
-    #47caff 50%
-  );
-  --vp-home-hero-image-filter: blur(40px);
-}
-
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
-  }
-}
-
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(72px);
-  }
 }
 
 /**
@@ -80,6 +62,22 @@
   --vp-custom-block-tip-text: var(--vp-c-brand-lightest);
   --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
 }
+
+.VPHomeHero .main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.VPHomeHero .main  .name {
+  margin-top: 8vh;
+}
+
+.VPHomeHero .main .text {
+  margin-top: 12px;
+  text-align: center;
+}
+
 
 /**
  * Component: Algolia

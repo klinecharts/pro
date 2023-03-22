@@ -3,10 +3,10 @@
 通过 npm 或 yarn 命令安装 
 ```bash
 # npm
-npm install klinecharts klinecharts-pro
+npm install klinecharts @klinecharts/pro
 
 # yarn
-yarn install klinecharts klinecharts-pro
+yarn install klinecharts @klinecharts/pro
 ```
 如果是直接通过 script 标签引入，可以使用下面两个 CDN 中的任意一个即可
 ::: warning 注意
@@ -15,10 +15,10 @@ yarn install klinecharts klinecharts-pro
 
 ```html
 <!-- unpkg -->
-<script src="https://unpkg.com/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://unpkg.com/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 
 <!-- jsdelivr -->
-<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 ```
 
 ## 使用
@@ -30,9 +30,9 @@ yarn install klinecharts klinecharts-pro
 在使用npm, yarn等包管理器中项目中
 ```javascript
 // 引入js
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 // 引入样式
-import 'klinecharts-pro/dist/klinecharts-pro.css'
+import '@klinecharts/pro/dist/klinecharts-pro.css'
 
 // 创建实例
 const chart = new KLineChartPro({
@@ -45,10 +45,10 @@ const chart = new KLineChartPro({
 在直接通过 script 标签引入的项目中
 ```html
 <!-- 引入js -->
-<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 
 <!-- 引入css -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.css"/>
 <script>
   // 创建实例
   const chart = new klinechartspro.KLineChartPro({

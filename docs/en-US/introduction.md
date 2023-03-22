@@ -4,7 +4,7 @@
 KLineChart Pro is a financial chart that encapsulates a layer of UI based on KLineChart.
 
 ## Why do I need KLineChart Pro?
-Among KLineChart users, some do not have front-end related knowledge reserves, making it difficult to use. KLineChartPro is designed to help them quickly integrate charts and focus their energy and time on more important things.
+Among KLineChart users, some do not have front-end related knowledge reserves, making it difficult to use. KLineChart Pro is designed to help them quickly integrate charts and focus their energy and time on more important things.
 
 
 ## Applicable groups

@@ -5,7 +5,7 @@ You can use default data and custom data to complete data access.
 The default data source is https://polygon.io/. You need to apply for an API key before using it. After the application is completed, data access is completed through the built-in `DefaultDatafeed` class.
 Sample,
 ```typescript
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 const chart = new KLineChartPro({
   container: document.getElementById('container'),
   datafeed: new DefaultDatafeed(`${polygonIoApiKey}`)
@@ -60,7 +60,7 @@ class CustomDatafeed {
 
 ### Step 2: Access custom data
 ```typescript
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 const chart = new KLineChartPro({
   container: document.getElementById('container'),
   datafeed: new CustomDatafeed()

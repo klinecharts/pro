@@ -5,7 +5,7 @@
 默认数据来源于 https://polygon.io/ ，在使用前需要去申请API key。申请完成后，通过内置`DefaultDatafeed`这个类完成数据接入。
 示例：
 ```typescript
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 const chart = new KLineChartPro({
   container: document.getElementById('container'),
   datafeed: new DefaultDatafeed(`${polygonIoApiKey}`)
@@ -60,7 +60,7 @@ class CustomDatafeed {
 
 ### 第二步，接入自定义数据
 ```typescript
-import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
+import { KLineChartPro, DefaultDatafeed } from '@klinecharts/pro'
 const chart = new KLineChartPro({
   container: document.getElementById('container'),
   datafeed: new CustomDatafeed()
