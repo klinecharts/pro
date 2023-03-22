@@ -21,9 +21,9 @@ export interface SymbolInfo {
   exchange?: string
   market?: string
   pricePrecision?: number
-  volumePrecision?: number,
-  priceCurrency?: string,
-  type?: string,
+  volumePrecision?: number
+  priceCurrency?: string
+  type?: string
   logo?: string
 }
 
@@ -76,3 +76,5 @@ export interface ChartPro {
 export type KLineChartPro = ChartPro
 
 export type DefaultDatafeed = Datafeed
+
+export declare function loadLocales(key: string, locales: any): void

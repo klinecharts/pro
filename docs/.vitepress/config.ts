@@ -2,18 +2,15 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'KLineChartPro',
+  title: 'KLineChart Pro',
   description: '开箱即用的金融图表',
+  outDir: '../website',
   locales: {
     root: {
       label: '简体中文',
       lang: 'zh-CN',
       link: '/',
       themeConfig: {
-        // nav: [
-        //   { text: '指南', link: '/guide/what-is-klinechart', activeMatch: 'guide' },
-        //   // { text: 'Pro', link: 'https://pro.klinecharts.com' },
-        // ],
         sidebar: [
           {
             text: '介绍',
@@ -24,8 +21,24 @@ export default defineConfig({
             link: '/getting-started'
           },
           {
+            text: '数据说明',
+            link: '/data-description'
+          },
+          {
             text: '数据接入',
-            link: '/access-data'
+            link: '/data-access'
+          },
+          {
+            text: 'API',
+            link: '/api'
+          },
+          {
+            text: '定制主题',
+            link: '/theme'
+          },
+          {
+            text: '国际化',
+            link: '/i18n'
           }
         ],
         docFooter: {
@@ -42,65 +55,41 @@ export default defineConfig({
       lang: 'en-US',
       link: '/en-US/',
       themeConfig: {
-        nav: [
-          { text: 'Guide', link: '/en-US/guide/what-is-klinechart', activeMatch: 'guide' },
-          // { text: 'Pro', link: 'https://pro.klinecharts.com/en-US' },
-        ],
-        sidebar: {
-          '/en-US': [
-            {
-              text: 'Introduction',
-              collapsed: false,
-              items: [
-                { text: 'What is KLineChart?', link: '/en-US/guide/what-is-klinechart' },
-                { text: 'Getting Started', link: '/en-US/guide/getting-started' }
-              ]
-            },
-            {
-              text: 'Basic',
-              collapsed: false,
-              items: [
-                { text: 'Style Configuration', link: '/en-US/guide/styles' },
-                { text: 'Datasource', link: '/en-US/guide/datasource' },
-                { text: 'Environment', link: '/en-US/guide/environment' },
-                { text: 'Hot Key', link: '/en-US/guide/hot-key' }
-              ]
-            },
-            {
-              text: 'Advanced',
-              collapsed: false,
-              items: [
-                { text: 'Figure', link: '/en-US/guide/figure' },
-                { text: 'Indicator', link: '/en-US/guide/indicator' },
-                { text: 'Overlay', link: '/en-US/guide/overlay' }
-              ]
-            },
-            {
-              text: 'API',
-              collapsed: false,
-              items: [
-                { text: 'Chart API', link: '/en-US/guide/chart-api' },
-                { text: 'Instance API', link: '/en-US/guide/instance-api' }
-              ]
-            },
-            {
-              text: 'Others',
-              collapsed: false,
-              items: [
-                { text: 'FAQ', link: '/en-US/guide/faq' },
-                { text: 'V8 To V9', link: '/en-US/guide/v8-to-v9' },
-                { text: 'Changelog', link: '/en-US/guide/changelog' },
-                { text: 'Feedback', link: '/en-US/guide/feedback' }
-              ]
-            }
-          ]
-        }
+        sidebar: [
+          {
+            text: 'Introduction',
+            link: '/introduction'
+          },
+          {
+            text: 'Getting Started',
+            link: '/getting-started'
+          },
+          {
+            text: 'Data Description',
+            link: '/data-description'
+          },
+          {
+            text: 'Data access',
+            link: '/data-access'
+          },
+          {
+            text: 'API',
+            link: '/api'
+          },
+          {
+            text: 'Theme',
+            link: '/theme'
+          },
+          {
+            text: 'Internationalization',
+            link: '/i18n'
+          }
+        ]
       }
     },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/images/logo.svg',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/klinecharts/pro' }
     ],

@@ -4,9 +4,8 @@
 <div align="center">
 
 [![Version](https://badgen.net/npm/v/@klinecharts/pro)](https://www.npmjs.com/package/@klinecharts/pro)
-[![Build Status](https://travis-ci.org/liihuu/KLineChart.svg?branch=master)](https://travis-ci.org/liihuu/KLineChart)
 [![Typescript](https://badgen.net/npm/types/@klinecharts/pro)](dist/index.d.ts)
-[![LICENSE](https://badgen.net/github/license/liihuu/KLineChart)](LICENSE)
+[![LICENSE](https://badgen.net/github/license/klinecharts/pro)](LICENSE)
 
 </div>
 
@@ -15,4 +14,4 @@
 + [English](https://pro.klinecharts.com/en-US)
 
 ## ©️ License
-KLineChart is available under the Apache License V2.
+KLineChart Pro is available under the Apache License V2.

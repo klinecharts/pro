@@ -18,6 +18,8 @@ import overlays from './extension'
 
 import ChartProImp from './ChartPro'
 
+import { load } from './i18n'
+
 import { Datafeed, SymbolInfo, Period, DatafeedSubscribeCallback } from './types'
 
 import './index.less'
@@ -105,5 +107,6 @@ class DefaultDatafeed implements Datafeed {
 
 export {
   DefaultDatafeed,
-  ChartProImp as KLineChartPro
+  ChartProImp as KLineChartPro,
+  load as loadLocales
 }

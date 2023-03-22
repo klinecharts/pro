@@ -1,7 +1,7 @@
 # 接入数据
 可以使用默认的数据，和自定义数据完成数据接入。
 
-### 使用默认数据
+## 使用默认数据
 默认数据来源于 https://polygon.io/ ，在使用前需要去申请API key。申请完成后，通过内置`DefaultDatafeed`这个类完成数据接入。
 示例：
 ```typescript
@@ -12,10 +12,10 @@ const chart = new KLineChartPro({
 })
 ```
 
-### 使用自定义数据
+## 使用自定义数据
 需要使用自定义数据，只需要按如下步骤即可。
 
-#### 第一步，实现数据接入API
+### 第一步，实现数据接入API
 ```typescript
 class CustomDatafeed {
   /**
@@ -58,7 +58,7 @@ class CustomDatafeed {
 }
 ```
 
-#### 第二步，接入自定义数据
+### 第二步，接入自定义数据
 ```typescript
 import { KLineChartPro, DefaultDatafeed } from 'klinecharts-pro'
 const chart = new KLineChartPro({
