@@ -46,10 +46,10 @@ const chart = new KLineChartPro({
 In projects introduced directly through script tags
 ```html
 <!-- Import js -->
-<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
 
 <!-- Import css -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinechartspro.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.css"/>
 <script>
   // Create Instance
   const chart = new klinechartspro.KLineChartPro({
