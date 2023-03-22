@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,N as o}from"./chunks/framework.a087d028.js";const A=JSON.parse('{"title":"Internationalization","description":"","frontmatter":{},"headers":[],"relativePath":"en-US/i18n.md"}'),l={name:"en-US/i18n.md"},e=o("",6),p=[e];function t(r,c,i,D,y,F){return n(),a("div",null,p)}const h=s(l,[["render",t]]);export{A as __pageData,h as default};
