@@ -72,9 +72,3 @@ export interface ChartPro {
   setPeriod(period: Period): void
   getPeriod(): Period
 }
-
-export type KLineChartPro = ChartPro
-
-export type DefaultDatafeed = Datafeed
-
-export declare function loadLocales(key: string, locales: any): void

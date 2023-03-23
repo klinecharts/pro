@@ -20,7 +20,7 @@ import ChartProImp from './ChartPro'
 
 import { load } from './i18n'
 
-import { Datafeed, SymbolInfo, Period, DatafeedSubscribeCallback } from './types'
+import { Datafeed, SymbolInfo, Period, DatafeedSubscribeCallback, ChartProOptions, ChartPro } from './types'
 
 import './index.less'
 
@@ -109,4 +109,8 @@ export {
   DefaultDatafeed,
   ChartProImp as KLineChartPro,
   load as loadLocales
+}
+
+export type {
+  Datafeed, SymbolInfo, Period, DatafeedSubscribeCallback, ChartProOptions, ChartPro
 }
