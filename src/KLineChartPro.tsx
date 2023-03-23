@@ -32,11 +32,7 @@ const Logo = (
   </svg>
 )
 
-export default class ChartProImp implements ChartPro {
-  private _container: Nullable<HTMLElement>
-
-  private _chartApi: Nullable<ChartPro> = null
-
+export default class KLineChartPro implements ChartPro {
   constructor (options: ChartProOptions) {
     if (utils.isString(options.container)) {
       this._container = document.getElementById(options.container as string)
@@ -82,6 +78,11 @@ export default class ChartProImp implements ChartPro {
       this._container
     )
   }
+
+  private _container: Nullable<HTMLElement>
+
+  private _chartApi: Nullable<ChartPro> = null
+
 
   setTheme (theme: string): void {
     this._container?.setAttribute('data-theme', theme)
