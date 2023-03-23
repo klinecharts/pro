@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: KLineChart Pro
-  text: Out of the box financial chart
+  text: Financial chart built out of the box based on KLineChart
   tagline: Use KLineChart like a Pro
   actions:
     - theme: brand

@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: KLineChart Pro
-  text: 开箱即用的金融图表
+  text: 基于KLineChart构建的开箱即用的金融图表
   tagline: 像专业人士一样使用KLineChart
   actions:
     - theme: brand
