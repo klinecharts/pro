@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [solidPlugin()],
   build: {
     cssTarget: 'chrome61',
+    sourcemap: true,
     rollupOptions: {
       external: ['klinecharts'],
       output: {
