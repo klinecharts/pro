@@ -37,6 +37,18 @@ import '@klinecharts/pro/dist/klinecharts-pro.css'
 // 创建实例
 const chart = new KLineChartPro({
   container: document.getElementById('container'),
+  // 初始化标的信息
+  symbol: {
+    exchange: 'XNYS',
+    market: 'stocks',
+    name: 'Alibaba Group Holding Limited American Depositary Shares, each represents eight Ordinary Shares',
+    shortName: 'BABA',
+    ticker: 'BABA',
+    priceCurrency: 'usd',
+    type: 'ADRC',
+  },
+  // 初始化周期
+  period: { multiplier: 15, timespan: 'minute', text: '15m' },
   // 这里使用默认的数据接入，如果实际使用中也使用默认数据，需要去 https://polygon.io/ 申请 API key
   datafeed: new DefaultDatafeed(`${polygonIoApiKey}`)
 })
@@ -52,10 +64,22 @@ const chart = new KLineChartPro({
 <script>
   // 创建实例
   const chart = new klinechartspro.KLineChartPro({
-  container: document.getElementById('container'),
-  // 这里使用默认的数据接入，如果实际使用中也使用默认数据，需要去 https://polygon.io/ 申请 API key
-  datafeed: new klinechartspro.DefaultDatafeed(`${polygonIoApiKey}`)
-})
+    container: document.getElementById('container'),
+    // 初始化标的信息
+    symbol: {
+      exchange: 'XNYS',
+      market: 'stocks',
+      name: 'Alibaba Group Holding Limited American Depositary Shares, each represents eight Ordinary Shares',
+      shortName: 'BABA',
+      ticker: 'BABA',
+      priceCurrency: 'usd',
+      type: 'ADRC',
+    },
+    // 初始化周期
+    period: { multiplier: 15, timespan: 'minute', text: '15m' },
+    // 这里使用默认的数据接入，如果实际使用中也使用默认数据，需要去 https://polygon.io/ 申请 API key
+    datafeed: new klinechartspro.DefaultDatafeed(`${polygonIoApiKey}`)
+  })
 </script>
 ```
 第一个图表就创建完成了

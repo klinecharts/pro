@@ -11,6 +11,7 @@ export default defineConfig({
       lang: 'zh-CN',
       link: '/',
       themeConfig: {
+        nav: [{ text: '预览', link: 'https://preview.klinecharts.com' }],
         sidebar: [
           {
             text: '介绍',
@@ -55,6 +56,7 @@ export default defineConfig({
       lang: 'en-US',
       link: '/en-US/',
       themeConfig: {
+        nav: [{ text: 'Preview', link: 'https://preview.klinecharts.com/#en-US' }],
         sidebar: [
           {
             text: 'Introduction',
