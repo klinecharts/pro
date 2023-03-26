@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,N as l}from"./chunks/framework.a087d028.js";const A=JSON.parse('{"title":"Getting started","description":"","frontmatter":{},"headers":[],"relativePath":"en-US/getting-started.md"}'),p={name:"en-US/getting-started.md"},o=l("",16),e=[o];function t(c,r,D,y,F,i){return n(),a("div",null,e)}const d=s(p,[["render",t]]);export{A as __pageData,d as default};
