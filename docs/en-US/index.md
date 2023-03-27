@@ -1,4 +1,6 @@
 ---
+title: Financial chart built out of the box based on KLineChart
+
 layout: home
 
 hero:
