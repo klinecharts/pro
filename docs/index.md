@@ -1,4 +1,6 @@
 ---
+title: 基于KLineChart构建的开箱即用的金融图表
+
 layout: home
 
 hero:

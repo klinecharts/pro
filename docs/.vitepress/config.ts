@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'KLineChart Pro',
-  description: '开箱即用的金融图表',
+  description: '基于KLineChart构建的开箱即用的金融图表',
   outDir: '../website',
   locales: {
     root: {
