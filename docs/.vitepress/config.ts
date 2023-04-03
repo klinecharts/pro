@@ -60,31 +60,31 @@ export default defineConfig({
         sidebar: [
           {
             text: 'Introduction',
-            link: '/introduction'
+            link: '/en-US/introduction'
           },
           {
             text: 'Getting Started',
-            link: '/getting-started'
+            link: '/en-US/getting-started'
           },
           {
             text: 'Data Description',
-            link: '/data-description'
+            link: '/en-US/data-description'
           },
           {
             text: 'Data access',
-            link: '/data-access'
+            link: '/en-US/data-access'
           },
           {
             text: 'API',
-            link: '/api'
+            link: '/en-US/api'
           },
           {
             text: 'Theme',
-            link: '/theme'
+            link: '/en-US/theme'
           },
           {
             text: 'Internationalization',
-            link: '/i18n'
+            link: '/en-US/i18n'
           }
         ]
       }
