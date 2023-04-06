@@ -83,4 +83,4 @@ In projects introduced directly through script tags
   })
 </script>
 ```
-The first chart is created.
+The first chart is created. Working <a href="https://jsfiddle.net/mawsyh/ct65rysp/20/" target="_blank">example</a>
