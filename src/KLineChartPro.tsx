@@ -70,6 +70,7 @@ export default class KLineChartPro implements ChartPro {
               { multiplier: 1, timespan: 'year', text: 'Y' }
             ]
           }
+          yScrolling={options.yScrolling ?? true}
           timezone={options.timezone ?? 'Asia/Shanghai'}
           mainIndicators={options.mainIndicators ?? ['MA']}
           subIndicators={options.subIndicators ?? ['VOL']}
@@ -107,6 +108,14 @@ export default class KLineChartPro implements ChartPro {
 
   getLocale (): string {
     return this._chartApi!.getLocale()
+  }
+
+  setYScrolling (yScrolling: boolean): void {
+    this._chartApi!.setYScrolling(yScrolling)
+  }
+
+  getYScrolling (): boolean {
+    return this._chartApi!.getYScrolling()
   }
 
   setTimezone (timezone: string): void {
