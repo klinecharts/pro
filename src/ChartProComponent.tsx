@@ -102,6 +102,8 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   })
 
   props.ref({
+    createOverlay: (value: any) => widget!.createOverlay(value),
+    removeOverlay: (value) => widget!.removeOverlay(value),
     setTheme,
     getTheme: () => theme(),
     setStyles,

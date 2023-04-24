@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { KLineData, Styles, DeepPartial } from 'klinecharts'
+import { KLineData, Styles, DeepPartial, OverlayRemove } from 'klinecharts'
 
 export interface SymbolInfo {
   ticker: string
@@ -66,6 +66,8 @@ export interface ChartPro {
   setLocale(locale: string): void
   getLocale(): string
   setTimezone(timezone: string): void
+  createOverlay (value: any, paneId?: string): any
+  removeOverlay: (remove?: string | OverlayRemove) => void
   getTimezone(): string
   setSymbol(symbol: SymbolInfo): void
   getSymbol(): SymbolInfo
