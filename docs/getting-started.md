@@ -82,4 +82,4 @@ const chart = new KLineChartPro({
   })
 </script>
 ```
-第一个图表就创建完成了
+第一个图表就创建完成了. <a href="https://jsfiddle.net/mawsyh/ct65rysp/20/" target="_blank"> 这里的工作示例 </a>
