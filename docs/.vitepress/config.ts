@@ -5,6 +5,9 @@ export default defineConfig({
   title: 'KLineChart Pro',
   description: '基于KLineChart构建的开箱即用的金融图表',
   outDir: '../website',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+  ],
   locales: {
     root: {
       label: '简体中文',
