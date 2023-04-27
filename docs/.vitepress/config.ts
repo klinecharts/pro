@@ -95,6 +95,7 @@ export default defineConfig({
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: '/logo.svg',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/klinecharts/pro' }
     ],
