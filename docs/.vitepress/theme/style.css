@@ -42,8 +42,8 @@
   --vp-home-hero-name-color: transparent;
  --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #1677FF 30%,
-    #26A69A
+    #2DC08E 30%,
+    #F92855
   );
 }
 
@@ -70,7 +70,7 @@
 }
 
 .VPHomeHero .main  .name {
-  margin-top: 8vh;
+  margin-top: 6vh;
 }
 
 .VPHomeHero .main .text {
