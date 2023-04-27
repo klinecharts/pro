@@ -14,7 +14,7 @@
 
 import { render } from 'solid-js/web'
 
-import { utils, Nullable, DeepPartial, Styles } from 'klinecharts'
+import { utils, Nullable, DeepPartial, Styles, OverlayRemove, OverlayTemplate } from 'klinecharts'
 
 import ChartProComponent from './ChartProComponent'
 
@@ -79,6 +79,17 @@ export default class KLineChartPro implements ChartPro {
 
   private _chartApi: Nullable<ChartPro> = null
 
+  createOverlay (value: any): void {
+    return this._chartApi!.createOverlay(value)
+  }
+
+  removeOverlay (value?: string | OverlayRemove): void {
+    return this._chartApi!.removeOverlay(value)
+  }
+
+  registerOverlay (template: OverlayTemplate): void {
+    return this._chartApi!.registerOverlay(template)
+  }
 
   setTheme (theme: string): void {
     this._container?.setAttribute('data-theme', theme)

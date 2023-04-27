@@ -16,7 +16,7 @@ import { createSignal, createEffect, onMount, Show, onCleanup, startTransition, 
 
 import {
   init, dispose, utils, Nullable, Chart, OverlayMode, Styles,
-  TooltipIconPosition, ActionType, PaneOptions, Indicator, DomPosition, FormatDateType, DeepPartial
+  TooltipIconPosition, ActionType, PaneOptions, Indicator, DomPosition, FormatDateType, DeepPartial, registerOverlay
 } from 'klinecharts'
 
 import lodashSet from 'lodash/set'
@@ -102,6 +102,9 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   })
 
   props.ref({
+    createOverlay: (value: any) => widget!.createOverlay(value),
+    removeOverlay: (value) => widget!.removeOverlay(value),
+    registerOverlay: (value) => registerOverlay(value),
     setTheme,
     getTheme: () => theme(),
     setStyles,
