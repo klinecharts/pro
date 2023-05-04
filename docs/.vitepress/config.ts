@@ -8,6 +8,12 @@ export default defineConfig({
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
   ],
+  markdown: {
+    theme: {
+      dark: 'material-theme-palenight',
+      light: 'github-light'
+    }  
+  },
   locales: {
     root: {
       label: '简体中文',
