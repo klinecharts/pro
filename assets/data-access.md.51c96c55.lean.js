@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,O as l}from"./chunks/framework.fe655854.js";const A=JSON.parse('{"title":"接入数据","description":"","frontmatter":{},"headers":[],"relativePath":"data-access.md","filePath":"data-access.md"}'),p={name:"data-access.md"},o=l("",11),t=[o];function e(c,r,y,D,F,i){return n(),a("div",null,t)}const f=s(p,[["render",e]]);export{A as __pageData,f as default};
