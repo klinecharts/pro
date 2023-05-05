@@ -76,7 +76,7 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   const [theme, setTheme] = createSignal(props.theme)
   const [styles, setStyles] = createSignal(props.styles)
   const [locale, setLocale] = createSignal(props.locale)
-
+  const [yScrolling, setYScrolling] = createSignal(props.yScrolling)
   const [symbol, setSymbol] = createSignal(props.symbol)
   const [period, setPeriod] = createSignal(props.period)
   const [indicatorModalVisible, setIndicatorModalVisible] = createSignal(false)
@@ -108,6 +108,8 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
     getStyles: () => widget!.getStyles(),
     setLocale,
     getLocale: () => locale(),
+    setYScrolling,
+    getYScrolling: () => yScrolling(),
     setTimezone: (timezone: string) => { setTimezone({ key: timezone, text: translateTimezone(props.timezone, locale()) }) },
     getTimezone: () => timezone().key,
     setSymbol,
@@ -425,6 +427,10 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
 
   createEffect(() => {
     widget?.setLocale(locale())
+  })
+
+  createEffect(() => {
+    widget?.setYScrolling(yScrolling())
   })
 
   createEffect(() => {

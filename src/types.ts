@@ -48,6 +48,7 @@ export interface ChartProOptions {
   watermark?: string | Node
   theme?: string
   locale?: string
+  yScrolling?: boolean
   drawingBarVisible?: boolean
   symbol: SymbolInfo
   period: Period
@@ -65,6 +66,8 @@ export interface ChartPro {
   getStyles(): Styles
   setLocale(locale: string): void
   getLocale(): string
+  setYScrolling(locale: boolean): void
+  getYScrolling(): boolean
   setTimezone(timezone: string): void
   getTimezone(): string
   setSymbol(symbol: SymbolInfo): void
