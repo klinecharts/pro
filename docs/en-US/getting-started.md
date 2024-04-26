@@ -17,9 +17,11 @@ For production environments, it is recommended to use a clear version number to 
 ```html
 <!-- unpkg -->
 <script src="https://unpkg.com/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
+<script src="https://unpkg.com/klinecharts/dist/umd/klinecharts.min.js"></script>
 
 <!-- jsdelivr -->
 <script src="https://cdn.jsdelivr.net/@klinecharts/pro/dist/klinecharts-pro.umd.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/klinecharts/dist/umd/klinecharts.min.js"></script>
 ```
 
 ## Usage
