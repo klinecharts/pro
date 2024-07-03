@@ -309,12 +309,12 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
   })
 
   createEffect((prev?: PrevSymbolPeriod) => {
+    const s = symbol()
+    const p = period()
     if (!loading) {
       if (prev) {
         props.datafeed.unsubscribe(prev.symbol, prev.period)
       }
-      const s = symbol()
-      const p = period()
       loading = true
       setLoadingVisible(true)
       const get = async () => {
