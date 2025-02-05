@@ -36,7 +36,7 @@ const parallelogram: OverlayTemplate = {
       ]
     }
     if (coordinates.length === 3) {
-      const coordinate = { x: coordinates[0].x + (coordinates[2].x - coordinates[1].x), y: coordinates[2].y }
+      const coordinate = { x: coordinates[0].x + (coordinates[2].x - coordinates[1].x), y: coordinates[2].y - coordinates[1].y + coordinates[0].y}
       return [
         {
           type: 'polygon',
