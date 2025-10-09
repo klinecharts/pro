@@ -14,7 +14,7 @@
 
 import { render } from 'solid-js/web'
 
-import { utils, Nullable, DeepPartial, Styles } from 'klinecharts'
+import { utils, Nullable, DeepPartial, Styles, Chart } from 'klinecharts'
 
 import ChartProComponent from './ChartProComponent'
 
@@ -127,5 +127,9 @@ export default class KLineChartPro implements ChartPro {
 
   getPeriod (): Period {
     return this._chartApi!.getPeriod()
+  }
+
+  getInstanceApi (): Nullable<Chart> {
+    return this._chartApi!.getInstanceApi()
   }
 }
