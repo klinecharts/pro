@@ -2,9 +2,25 @@
 
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
+import path from "path"
+
 
 export default defineConfig({
   plugins: [solidPlugin()],
+  resolve: {
+    alias: {
+      "@klinecharts/pro": path.resolve(__dirname, "../pro/src"),
+    },
+  },
+  optimizeDeps: {
+    exclude: ["@klinecharts/pro"], // important — prevent prebundling
+  },
+  server: {
+    fs: {
+      // allow vite to serve files outside project root
+      allow: [".."],
+    },
+  },
   build: {
     cssTarget: 'chrome61',
     sourcemap: true,

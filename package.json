@@ -1,5 +1,5 @@
 {
-  "name": "@klinecharts/pro",
+  "name": "@hasee_hive/klinecharts-pro",
   "version": "0.1.1",
   "description": "Financial chart built out of the box based on KLineChart.",
   "type": "module",
