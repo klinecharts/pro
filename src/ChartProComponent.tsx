@@ -212,6 +212,9 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
       applyNewData: (data: any) => {
         console.log(widget);
         widget!.applyNewData(data);
+      },
+      getKLineChartWidget: () => {
+        return widget;
       }
     })
 

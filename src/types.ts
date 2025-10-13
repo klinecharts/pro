@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { KLineData, Styles, DeepPartial } from 'klinecharts'
+import { KLineData, Styles, DeepPartial, Chart, Nullable } from 'klinecharts'
 
 export interface SymbolInfo {
   ticker: string
@@ -72,4 +72,5 @@ export interface ChartPro {
   setPeriod(period: Period): void
   getPeriod(): Period
   applyNewData(data : any): void
+  getKLineChartWidget(): Nullable<Chart>
 }

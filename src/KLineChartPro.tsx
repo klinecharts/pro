@@ -132,4 +132,8 @@ export default class KLineChartPro implements ChartPro {
   applyNewData (data: any): void {
     this._chartApi!.applyNewData(data);
   }
+
+  getKLineChartWidget () {
+    return this._chartApi!.getKLineChartWidget();
+  }
 }
