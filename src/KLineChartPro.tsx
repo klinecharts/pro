@@ -129,7 +129,7 @@ export default class KLineChartPro implements ChartPro {
     return this._chartApi!.getPeriod()
   }
 
-  updateData (data: any): void {
-    this._chartApi!.updateData(data);
+  applyNewData (data: any): void {
+    this._chartApi!.applyNewData(data);
   }
 }

@@ -209,7 +209,7 @@ const ChartProComponent: Component<ChartProComponentProps> = props => {
       getSymbol: () => symbol(),
       setPeriod,
       getPeriod: () => period(),
-      updateData: (data: any) => {
+      applyNewData: (data: any) => {
         console.log(widget);
         widget!.applyNewData(data);
       }
