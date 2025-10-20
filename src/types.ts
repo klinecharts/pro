@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { KLineData, Styles, DeepPartial } from 'klinecharts'
+import { KLineData, Styles, DeepPartial, Nullable, Chart, DataLoader, Period as DefaultPeriod } from 'klinecharts'
 
 export interface SymbolInfo {
   ticker: string
@@ -27,9 +27,7 @@ export interface SymbolInfo {
   logo?: string
 }
 
-export interface Period {
-  multiplier: number
-  timespan: string
+export interface Period extends DefaultPeriod {
   text: string
 }
 
@@ -40,6 +38,11 @@ export interface Datafeed {
   getHistoryKLineData (symbol: SymbolInfo, period: Period, from: number, to: number): Promise<KLineData[]>
   subscribe (symbol: SymbolInfo, period: Period, callback: DatafeedSubscribeCallback): void
   unsubscribe (symbol: SymbolInfo, period: Period): void
+}
+
+export interface ChartDataLoaderType extends DataLoader {
+  searchSymbols (search?: string): Promise<SymbolInfo[]>
+  loading: boolean
 }
 
 export interface ChartProOptions {
@@ -71,4 +74,7 @@ export interface ChartPro {
   getSymbol(): SymbolInfo
   setPeriod(period: Period): void
   getPeriod(): Period
+  getInstanceApi(): Nullable<Chart>
+  resize(): void
+  dispose(): void
 }

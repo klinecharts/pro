@@ -18,11 +18,11 @@ import { Modal, List, Input } from '../../component'
 
 import i18n from '../../i18n'
 
-import { SymbolInfo, Datafeed } from '../../types'
+import { SymbolInfo, ChartDataLoaderType } from '../../types'
 
 export interface SymbolSearchModalProps {
   locale: string
-  datafeed: Datafeed
+  datafeed: ChartDataLoaderType
   onSymbolSelected: (symbol: SymbolInfo) => void
   onClose: () => void
 }

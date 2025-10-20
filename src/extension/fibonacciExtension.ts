@@ -20,10 +20,20 @@ const fibonacciExtension: OverlayTemplate = {
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
-  createPointFigures: ({ coordinates, overlay, precision }) => {
+  createPointFigures: ({ chart, yAxis, coordinates, overlay }) => {
     const fbLines: LineAttrs[] = []
     const texts: TextAttrs[] = []
     if (coordinates.length > 2) {
+      let precision = 0
+      const symbol = chart.getSymbol()
+      if ((yAxis?.isInCandle() ?? true) && symbol) {
+        precision = symbol.pricePrecision
+      } else {
+        const indicators = chart.getIndicators({ paneId: overlay.paneId })
+        indicators.forEach(indicator => {
+          precision = Math.max(precision, indicator.precision)
+        })
+      }
       const points = overlay.points
       // @ts-expect-error
       const valueDif = points[1].value - points[0].value

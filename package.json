@@ -63,6 +63,6 @@
     "solid-js": "^1.6.11"
   },
   "peerDependencies": {
-    "klinecharts": ">=9.0.0"
+    "klinecharts": "^10.0.0-alpha9"
   }
 }
