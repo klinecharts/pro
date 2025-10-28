@@ -17,12 +17,15 @@ import anyWaves from './anyWaves'
 import abcd from './abcd'
 import xabcd from './xabcd'
 
+import positionLine from './position/orderLine'
+
 const overlays = [
   arrow,
   circle, rect, triangle, parallelogram,
   fibonacciCircle, fibonacciSegment, fibonacciSpiral,
   fibonacciSpeedResistanceFan, fibonacciExtension, gannBox,
-  threeWaves, fiveWaves, eightWaves, anyWaves, abcd, xabcd
+  threeWaves, fiveWaves, eightWaves, anyWaves, abcd, xabcd,
+  positionLine(),
 ]
 
 export default overlays

@@ -14,11 +14,12 @@
 
 import { render } from 'solid-js/web'
 
-import { utils, Nullable, DeepPartial, Styles } from 'klinecharts'
+import { utils, Nullable, DeepPartial, Styles, dispose } from 'klinecharts'
 
-import ChartProComponent from './ChartProComponent'
+import ChartProComponent, { instanceapi } from './ChartProComponent'
 
-import { SymbolInfo, Period, ChartPro, ChartProOptions } from './types'
+import { SymbolInfo, Period, ChartPro, ChartProOptions, ProChart } from './types/types'
+import ChartDataLoader from './DataLoader'
 
 const Logo = (
   <svg class="logo" viewBox="0 0 80 92">
@@ -40,6 +41,7 @@ export default class KLineChartPro implements ChartPro {
     }
     this._container.classList.add('klinecharts-pro')
     this._container.setAttribute('data-theme', options.theme ?? 'light')
+    const dataLoader = new ChartDataLoader(options.datafeed)
 
     render(
       () => (
@@ -50,26 +52,30 @@ export default class KLineChartPro implements ChartPro {
           theme={options.theme ?? 'light'}
           locale={options.locale ?? 'zh-CN'}
           drawingBarVisible={options.drawingBarVisible ?? true}
+          orderPanelVisible={options.orderPanelVisible ?? false}
           symbol={options.symbol}
           period={options.period}
           periods={
             options.periods ?? [
-              { multiplier: 1, timespan: 'minute', text: '1m' },
-              { multiplier: 5, timespan: 'minute', text: '5m' },
-              { multiplier: 15, timespan: 'minute', text: '15m' },
-              { multiplier: 1, timespan: 'hour', text: '1H' },
-              { multiplier: 2, timespan: 'hour', text: '2H' },
-              { multiplier: 4, timespan: 'hour', text: '4H' },
-              { multiplier: 1, timespan: 'day', text: 'D' },
-              { multiplier: 1, timespan: 'week', text: 'W' },
-              { multiplier: 1, timespan: 'month', text: 'M' },
-              { multiplier: 1, timespan: 'year', text: 'Y' }
+              { span: 1, type: 'minute', text: '1m' },
+              { span: 5, type: 'minute', text: '5m' },
+              { span: 15, type: 'minute', text: '15m' },
+              { span: 1, type: 'hour', text: '1H' },
+              { span: 2, type: 'hour', text: '2H' },
+              { span: 4, type: 'hour', text: '4H' },
+              { span: 1, type: 'day', text: 'D' },
+              { span: 1, type: 'week', text: 'W' },
+              { span: 1, type: 'month', text: 'M' },
+              { span: 1, type: 'year', text: 'Y' }
             ]
           }
-          timezone={options.timezone ?? 'Asia/Shanghai'}
+          timezone={options.timezone ?? 'Etc/UTC'}
           mainIndicators={options.mainIndicators ?? ['MA']}
           subIndicators={options.subIndicators ?? ['VOL']}
-          datafeed={options.datafeed}/>
+          dataTimestamp={options.dataTimestamp ?? new Date().getTime()}
+          orderController={options.orderController}
+          rootElementId={options.rootElementId ?? this._container?.id ?? ''}
+          dataloader={dataLoader}/>
       ),
       this._container
     )
@@ -79,6 +85,13 @@ export default class KLineChartPro implements ChartPro {
 
   private _chartApi: Nullable<ChartPro> = null
 
+  destroy() {
+    if (this._container)
+      dispose(this._container!)
+
+    this._container = null
+    this._chartApi = null
+  }
 
   setTheme (theme: string): void {
     this._container?.setAttribute('data-theme', theme)
@@ -127,5 +140,14 @@ export default class KLineChartPro implements ChartPro {
 
   getPeriod (): Period {
     return this._chartApi!.getPeriod()
+  }
+  getInstanceApi(): Nullable<ProChart> {
+    return instanceapi()
+  }
+  resize(): void {
+    instanceapi()!.resize()
+  }
+  dispose(): void {
+    this.destroy()
   }
 }

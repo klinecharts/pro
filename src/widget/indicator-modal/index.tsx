@@ -21,7 +21,8 @@ import i18n from '../../i18n'
 type OnIndicatorChange = (
   params: {
     name: string
-    paneId: string
+    paneId?: string
+    id: string
     added: boolean
   }
 ) => void
@@ -54,7 +55,7 @@ const IndicatorModal: Component<IndicatorModalProps> = props => {
               <li
                 class="row"
                 onClick={_ => {
-                  props.onMainIndicatorChange({ name, paneId: 'candle_pane', added: !checked })
+                  props.onMainIndicatorChange({ name, id: 'candle_pane', added: !checked })
                 }}>
                 <Checkbox checked={checked} label={i18n(name.toLowerCase(), props.locale)}/>
               </li>
@@ -76,7 +77,7 @@ const IndicatorModal: Component<IndicatorModalProps> = props => {
                 class="row"
                 onClick={_ => {
                   // @ts-expect-error
-                  props.onSubIndicatorChange({ name, paneId: props.subIndicators[name] ?? '', added: !checked });
+                  props.onSubIndicatorChange({ name, id: props.subIndicators[name] ?? '', added: !checked });
                 }}>
                 <Checkbox checked={checked} label={i18n(name.toLowerCase(), props.locale)}/>
               </li>
