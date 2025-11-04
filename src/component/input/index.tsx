@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import { JSX, Component, mergeProps, Show, createSignal } from 'solid-js'
+import { JSX, Component, mergeProps, Show, createSignal, createEffect } from 'solid-js'
 
 export interface InputProps {
   class?: string
@@ -25,34 +25,47 @@ export interface InputProps {
   placeholder?: string
   value: string | number
   disabled?: boolean
-  onChange?: (v: string | number) => void 
+  focus?: boolean
+  onChange?: (v: string | number) => void
+  onKeyDown?: (event: KeyboardEvent) => void
 }
+export const [inputClass, setInputClass] = createSignal<string>('klinecharts-pro-input klinecharts-pro-timeframe-modal-input')
 
 const Input: Component<InputProps> = p => {
   const props = mergeProps({ min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER }, p)
-  let input: HTMLInputElement
+  let input: HTMLInputElement|undefined
 
   const [status, setStatus] = createSignal('normal')
+  const focusInput = (element: HTMLInputElement | null) => {
+    if (element) {
+      element.focus();
+    }
+  };
+
+  createEffect(() => {
+    focusInput(document.querySelector("#myInput"));
+  });
 
   return (
     <div
       style={props.style}
-      class={`klinecharts-pro-input ${props.class ?? ''}`}
+      class={`${inputClass()}${props.class ?? ''}`}
       data-status={status()}
       onClick={() => { input?.focus() }}>
       <Show when={props.prefix}>
         <span class="prefix">{props.prefix}</span>
       </Show>  
       <input
-        ref={(el) => { input = el }}
+        id="myInput"
+        ref={input}
         class="value"
         placeholder={props.placeholder ?? ''}
         value={props.value}
+        autofocus={props.focus === true ? props.focus : false}
         onFocus={() => { setStatus('focus') }}
         onBlur={() => { setStatus('normal') }}
         onChange={(e) => {
-          // @ts-expect-error
-          const v = e.target.value
+          const v = (e.target as HTMLInputElement).value
           if ('precision' in props) {
             let reg
             const decimalDigit = Math.max(0, Math.floor(props.precision!))
@@ -67,7 +80,8 @@ const Input: Component<InputProps> = p => {
           } else {
             props.onChange?.(v)
           }
-        }}/>
+        }}
+        onKeyDown={props.onKeyDown}/>
       <Show when={props.suffix}>
         <span class="suffix">{props.suffix}</span>
       </Show>  

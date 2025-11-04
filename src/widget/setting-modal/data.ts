@@ -13,61 +13,42 @@
  */
 
 import i18n from '../../i18n'
+import useDataSource from './settings/dataSource'
+import getCandleSettings from './settings/candle'
+import getIndicatorSettings from './settings/indicator'
+import getXAxisSettings from './settings/xAxis'
+import getYAxisSettings from './settings/yAxis'
+import getGridSettings from './settings/grid'
+import getCrosshairSettings from './settings/crosshair'
+import getOverlaySettings from './settings/overlay'
 
 export function getOptions (locale: string) {
+  const { size } = useDataSource(locale)
   return [
+    ...getCandleSettings(locale),
+    ...getIndicatorSettings(locale),
+    ...getXAxisSettings(locale),
+    ...getYAxisSettings(locale),
+    ...getGridSettings(locale),
+    ...getCrosshairSettings(locale),
+    ...getOverlaySettings(locale),
+
+    // seperator
     {
-      key: 'candle.type',
-      text: i18n('candle_type', locale),
+      key: 'separator.size',
+      text: i18n('Seperator size', locale),
       component: 'select',
-      dataSource: [
-        { key: 'candle_solid', text: i18n('candle_solid', locale) },
-        { key: 'candle_stroke', text: i18n('candle_stroke', locale) },
-        { key: 'candle_up_stroke', text: i18n('candle_up_stroke', locale) },
-        { key: 'candle_down_stroke', text: i18n('candle_down_stroke', locale) },
-        { key: 'ohlc', text: i18n('ohlc', locale) },
-        { key: 'area', text: i18n('area', locale) }
-      ]
+      dataSource: size
     },
     {
-      key: 'candle.priceMark.last.show',
-      text: i18n('last_price_show', locale),
-      component: 'switch'
-    },
-    {
-      key: 'candle.priceMark.high.show',
-      text: i18n('high_price_show', locale),
-      component: 'switch'
-    },
-    {
-      key: 'candle.priceMark.low.show',
-      text: i18n('low_price_show', locale),
-      component: 'switch'
-    },
-    {
-      key: 'indicator.lastValueMark.show',
-      text: i18n('indicator_last_value_show', locale),
-      component: 'switch'
-    },
-    {
-      key: 'yAxis.type',
-      text: i18n('price_axis_type', locale),
-      component: 'select',
-      dataSource: [
-        { key: 'normal', text: i18n('normal', locale) },
-        { key: 'percentage', text: i18n('percentage', locale) },
-        { key: 'log', text: i18n('log', locale) }
-      ],
-    },
-    {
-      key: 'yAxis.reverse',
-      text: i18n('reverse_coordinate', locale),
+      key: 'separator.fill',
+      text: i18n('Fill', locale),
       component: 'switch',
     },
     {
-      key: 'grid.show',
-      text: i18n('grid_show', locale),
-      component: 'switch',
+      key: 'separator.activeBackgroundColor',
+      text: i18n('Background color', locale),
+      component: 'color',
     }
   ]
 }

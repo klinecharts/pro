@@ -20,10 +20,20 @@ const fibonacciSegment: OverlayTemplate = {
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
-  createPointFigures: ({ coordinates, overlay, precision }) => {
+  createPointFigures: ({ coordinates, overlay, chart, yAxis }) => {
     const lines: LineAttrs[] = []
     const texts: TextAttrs[] = []
     if (coordinates.length > 1) {
+      let precision = 0
+      const symbol = chart.getSymbol()
+      if ((yAxis?.isInCandle() ?? true) && symbol) {
+        precision = symbol.pricePrecision
+      } else {
+        const indicators = chart.getIndicators({ paneId: overlay.paneId })
+        indicators.forEach(indicator => {
+          precision = Math.max(precision, indicator.precision)
+        })
+      }
       const textX = coordinates[1].x > coordinates[0].x ? coordinates[0].x : coordinates[1].x
       const percents = [1, 0.786, 0.618, 0.5, 0.382, 0.236, 0]
       const yDif = coordinates[0].y - coordinates[1].y

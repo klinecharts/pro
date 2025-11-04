@@ -1,14 +1,15 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?f4efml');
-  src:  url('fonts/icomoon.eot?f4efml#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?f4efml') format('truetype'),
-    url('fonts/icomoon.woff?f4efml') format('woff'),
-    url('fonts/icomoon.svg?f4efml#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?mr6pu2');
+  src:  url('fonts/icomoon.eot?mr6pu2#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?mr6pu2') format('truetype'),
+    url('fonts/icomoon.woff?mr6pu2') format('woff'),
+    url('fonts/icomoon.svg?mr6pu2#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
+@import url("./ie7/ie7.css");
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
@@ -39,5 +40,61 @@
 }
 .icon-icon-visible:before {
   content: "\e903";
+  color: #fff;
+}
+.icon-lock:before {
+  content: "\e98f";
+  color: #fff;
+}
+.icon-unlocked:before {
+  content: "\e990";
+  color: #fff;
+}
+.icon-bin:before {
+  content: "\e9ac";
+  color: #fff;
+}
+.icon-plus:before {
+  content: "\ea0a";
+  color: #fff;
+}
+.icon-minus:before {
+  content: "\ea0b";
+  color: #fff;
+}
+.icon-cancel-circle:before {
+  content: "\ea0d";
+  color: #fff;
+}
+.icon-blocked:before {
+  content: "\ea0e";
+  color: #fff;
+}
+.icon-cross:before {
+  content: "\ea0f";
+  color: #fff;
+}
+.icon-checkmark:before {
+  content: "\ea10";
+  color: #fff;
+}
+.icon-checkmark2:before {
+  content: "\ea11";
+  color: #fff;
+}
+.icon-enter:before {
+  content: "\ea13";
+  color: #fff;
+}
+.icon-exit:before {
+  content: "\ea14";
+  color: #fff;
+}
+.icon-circle-down:before {
+  content: "\ea43";
+  color: #fff;
+}
+.icon-circle-left:before {
+  content: "\ea44";
   color: #fff;
 }

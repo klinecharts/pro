@@ -14,7 +14,7 @@
 
 import { Component, Show, createSignal, onMount, onCleanup } from 'solid-js'
 
-import { SymbolInfo, Period } from '../../types'
+import { SymbolInfo, Period } from '../../types/types'
 
 import i18n from '../../i18n'
 

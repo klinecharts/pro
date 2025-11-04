@@ -26,7 +26,7 @@ import {
 
 export interface DrawingBarProps {
   locale: string
-  onDrawingItemClick: (overlay: OverlayCreate) => void
+  onDrawingItemClick: (value: string | OverlayCreate) => void
   onModeChange: (mode: string) => void,
   onLockChange: (lock: boolean) => void
   onVisibleChange: (visible: boolean) => void
